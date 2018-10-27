@@ -23,15 +23,15 @@ export PYTHONPATH=/N/u/brlife/git/nibabel:$PYTHONPATH
 ./run.sh
 
 #removing files
-rm *.trk -f
-rm *.tck -f
-rm *.nii.gz -f
-rm -r tractograms_directory -f
-rm -r examples_directory* -f
-rm kdt -f
-rm prototypes.npy -f
-rm -r aligned_ROIs -f
-rm -r templates -f
-rm distance* -f
+#rm *.trk -f
+#rm *.tck -f
+#rm *.nii.gz -f
+#rm -r tractograms_directory -f
+#rm -r examples_directory* -f
+#rm kdt -f
+#rm prototypes.npy -f
+#rm -r aligned_ROIs -f
+#rm -r templates -f
+#rm distance* -f
 
 echo "Complete"
