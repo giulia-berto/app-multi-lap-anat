@@ -13,6 +13,7 @@ import time
 import ntpath
 from os.path import isfile
 from tractograms_slr import tractograms_slr
+from dipy.tracking.streamline import apply_affine
 from dissimilarity import compute_dissimilarity, dissimilarity
 from dipy.tracking.distances import bundles_distances_mam
 from utils import resample_tractogram, compute_superset, compute_kdtree_and_dr_tractogram, save_bundle
