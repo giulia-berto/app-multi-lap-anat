@@ -39,7 +39,8 @@ else
 	exit 1
 fi
 done
-if [ ! $subjID == `jq -r '._inputs[2+$num_ex+$num_ex+$num_ex].meta.subject' config.json` ]; then
+id_true=$(jq -r "._inputs[2+$num_ex+$num_ex+$num_ex].meta.subject" config.json | tr -d "_")
+if [ ! $subjID == $id_true ]; then
 echo "Inputs subject id incorrectly inserted. Check them again."
 	exit 1
 fi
