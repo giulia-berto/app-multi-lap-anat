@@ -1,0 +1,37 @@
+#!/bin/bash
+#PBS -k o
+#PBS -l nodes=1:ppn=16,walltime=12:00:00
+
+## modules
+echo "Loading modules"
+module load ants
+module unload matlab
+module load matlab/2017a
+module load spm/8
+module unload python
+module load dipy/dev
+module load nodejs
+module unload mrtrix/0.2.12 
+module load mrtrix/0.3.15
+module unload fsl
+module load fsl/5.0.9
+echo "Finished loading modules"
+
+export PYTHONPATH=/N/u/brlife/git/nibabel:$PYTHONPATH
+
+#execute app
+./run.sh
+
+#removing files
+rm *.trk -f
+rm *.tck -f
+rm *.nii.gz -f
+rm -r tractograms_directory -f
+rm -r examples_directory* -f
+rm kdt -f
+rm prototypes.npy -f
+rm -r aligned_ROIs -f
+rm -r templates -f
+rm distance* -f
+
+echo "Complete"
