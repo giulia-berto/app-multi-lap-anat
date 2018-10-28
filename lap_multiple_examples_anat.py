@@ -7,7 +7,9 @@ import argparse
 import os.path
 import numpy as np
 import time
-from lap_single_example_anat import lap_single_example, save_bundle
+import json
+from lap_single_example_anat import lap_single_example
+from utils import save_bundle
 
 
 def ranking_schema(superset_estimated_target_tract_idx, superset_estimated_target_tract_cost):
@@ -61,8 +63,12 @@ def lap_multiple_examples(moving_tractograms_dir, static_tractogram, ex_dir, lD,
 
 		print("Extracting the estimated bundle...")
 		estimated_bundle_idx_ranked_med = estimated_bundle_idx_ranked[0:int(example_bundle_len_med)]
+
+		with open('config.json') as f:
+            		data = json.load(f)
+		        step_size = data["step_size"]
 		
-		save_bundle(estimated_bundle_idx_ranked_med, static_tractogram, out_filename)
+		save_bundle(estimated_bundle_idx_ranked_med, static_tractogram, step_size, out_filename)
 
 		return result_lap
 

@@ -17,7 +17,7 @@ disp('Converting afq to .trk');
 fid=fopen('tract_name_list.txt', 'w');
 
 if (config.tract1 > 0)
-    for tract = [config.tract1, config.tract2]
+    for tract = [config.tract1]
         if (tract > 0)
             tract_name=strrep(fg_classified(tract).name,' ','_');
             write_fg_to_trk_shift(fg_classified(tract),ref_src,sprintf('%s_tract.trk',tract_name));
