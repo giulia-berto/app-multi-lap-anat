@@ -34,7 +34,7 @@ def compute_lap_matrices(superset_idx, source_tract, tractogram, roi1, roi2, sub
 	"""
 	with open('config.json') as f:
             data = json.load(f)
-	    norm = data["norm_mat"]
+	    norm_mat = data["norm_mat"]
 	distance = bundles_distances_mam
 	tractogram = np.array(tractogram, dtype=np.object)
 	
