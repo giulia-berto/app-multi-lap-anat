@@ -17,6 +17,8 @@ module unload fsl
 module load fsl/5.0.9
 echo "Finished loading modules"
 
+export PYTHONPATH=/N/u/brlife/git/nibabel:$PYTHONPATH
+
 #execute app
 ./run.sh
 
