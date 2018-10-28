@@ -100,7 +100,6 @@ do
 	t1_moving=${arr_t1s[i]//[,\"]}
 	id_mov=$(jq -r "._inputs[1+$i+$num_ex].meta.subject" config.json | tr -d "_")		
 	matlab -nosplash -nodisplay -r "afqConverterMulti(${arr_seg[i]//,}, ${arr_t1s[i]//,})";
-    	#singularity exec docker://brainlife/mcr:neurodebian1604-r2017a ./compiled/afqConverterMulti ${arr_seg[i]//,} ${arr_t1s[i]//,}
 	while read tract_name; do
 		echo "Tract name: $tract_name";
 		if [ ! -d "examples_directory_$tract_name" ]; then
@@ -138,10 +137,10 @@ while read tract_name; do
 done < tract_name_list.txt
 
 if [ -z "$(ls -A -- "tracts_tck")" ]; then    
-	echo "multi-LAPanat failed."; 
-	exit 1;
+	echo "multi-LAPanat failed."
+	exit 1
 else    
-	echo "multi-LAPanat done."; 
+	echo "multi-LAPanat done."
 fi
 
 if [ ${multi_LAP} == true ]; then
@@ -159,7 +158,29 @@ if [ ${multi_LAP} == true ]; then
 fi
 
 
-# DSC computation
+echo "Build partial tractogram"
+run=multi-LAPanat
+output_filename=${subjID}'_var-partial_tract_'${run}'.tck';
+python build_partial_tractogram.py -tracts_tck_dir 'tracts_tck' -out ${output_filename};
+if [ -f ${output_filename} ]; then 
+    echo "Partial tractogram built."
+else 
+	echo "Partial tractogram missing."
+	exit 1
+fi
+
+echo "Build a wmc structure"
+stat_sub=\'$subjID\'
+tag=\'$run\'
+matlab -nosplash -nodisplay -r "build_wmc_structure($stat_sub, $tag)";
+if [ -f 'output.mat' ]; then 
+    echo "WMC structure created."
+else 
+	echo "WMC structure missing."
+	exit 1
+fi
+
+
 echo "Computing voxel measures"
 python compute_dsc.py -sub $subjID -list 'tract_name_list.txt';
 
@@ -170,3 +191,4 @@ if [ ! $ret -eq 0 ]; then
 	exit $ret
 fi
 
+echo "Complete"
