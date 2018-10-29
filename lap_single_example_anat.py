@@ -72,6 +72,9 @@ def compute_lap_matrices(superset_idx, source_tract, tractogram, roi1, roi2, sub
 def RLAP_modified(distance_matrix, endpoint_matrix, roi_matrix, superset_idx, lD, lE, lR):
     """Code for MODIFIED Rectangular Linear Assignment Problem.
     """
+    lD = np.asarray(lD, dtype='float64')
+    lE = np.asarray(lE, dtype='float64')
+    lR = np.asarray(lR, dtype='float64')
     print("Computing cost matrix.")
     cost_matrix = lD * distance_matrix + lE * endpoint_matrix + lR * roi_matrix
     print("Computing RLAP with LAPJV...")
