@@ -126,7 +126,7 @@ while read tract_name; do
 	echo "Tract name: $tract_name"; 
 	base_name=$tract_name'_tract'
 	output_filename=tracts_tck/${subjID}_${base_name}_${run}.tck
-	python lap_multiple_examples_anat.py -moving_dir tractograms_directory -static $subjID'_track.tck' -ex_dir examples_directory_$tract_name -lD $lD -lE $lE -lR $lR -out $output_filename;
+	python lap_multiple_examples_anat.py -moving_dir tractograms_directory -static $subjID'_track.trk' -ex_dir examples_directory_$tract_name -lD $lD -lE $lE -lR $lR -out $output_filename;
 
 done < tract_name_list.txt
 
@@ -146,7 +146,7 @@ if [ ${multi_LAP} == true ]; then
 		echo "Tract name: $tract_name"; 
 		base_name=$tract_name'_tract'
 		output_filename=tracts_tck/${subjID}_${base_name}_${run}.tck
-		python lap_multiple_examples_anat.py -moving_dir tractograms_directory -static $subjID'_track.tck' -ex_dir examples_directory_$tract_name -lD 1 -lE 0 -lR 0 -out $output_filename;
+		python lap_multiple_examples_anat.py -moving_dir tractograms_directory -static $subjID'_track.trk' -ex_dir examples_directory_$tract_name -lD 1 -lE 0 -lR 0 -out $output_filename;
 
 	done < tract_name_list.txt
 fi
