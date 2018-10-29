@@ -94,7 +94,7 @@ if __name__ == '__main__':
 	tract_name = content[0]
 
 	if multi_LAP == True:
-		run_list = ['multi-LAPanat', 'multi-LAP']
+		run_list = ['multi-LAP', 'multi-LAPanat']
 		results_matrix = np.zeros((2, 6))
 	else:
 		run_list = ['multi-LAPanat']
@@ -117,7 +117,7 @@ if __name__ == '__main__':
 		true_tract_res = resample_tractogram(true_tract, step_size)
 		true_tract = true_tract_res
 		DSC, wDSC, J, sensitivity, vol_A, vol_B = compute_voxel_measures(estimated_tract, true_tract, affine)
-		print("The DSC of the tract %s is %s" %(tract_name, DSC))
+		print("The DSC of the tract %s with %s is %s" %(tract_name, run, DSC))
 		results_matrix[r] = [DSC, wDSC, J, sensitivity, vol_A, vol_B] 
 		with open(results, "a") as myfile:
 			myfile.write("%0.3f\t%0.3f\t%0.3f\t%0.3f\t%s\t%s\n" %(DSC, wDSC, J, sensitivity, vol_A, vol_B))
