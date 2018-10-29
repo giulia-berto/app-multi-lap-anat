@@ -22,7 +22,7 @@ export PYTHONPATH=/N/u/brlife/git/nibabel:$PYTHONPATH
 #execute app
 ./run.sh
 
-removing files
+#removing files
 rm *.trk -f
 rm *.tck -f
 rm *.nii.gz -f
