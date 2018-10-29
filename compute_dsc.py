@@ -89,11 +89,11 @@ if __name__ == '__main__':
 	with open('config.json') as f:
             data = json.load(f)
 	    step_size = data["step_size"]
-	    multi-LAP = data["multi_LAP"]
+	    multi_LAP = data["multi_LAP"]
 
 	tract_name = content[0]
 
-	if multi-LAP == True:
+	if multi_LAP == True:
 		run_list = ['multi-LAPanat', 'multi-LAP']
 		results_matrix = np.zeros((2, 6))
 	else:
