@@ -19,6 +19,7 @@ def resample_tractogram(tractogram, step_size):
 	nb_res_points = np.int(np.floor(lengths[i]/step_size))
 	tmp = set_number_of_points(f, nb_res_points)
 	tractogram_res.append(tmp)
+    tractogram_res = nib.streamlines.array_sequence.ArraySequence(tractogram_res)
     return tractogram_res
 
 
@@ -68,33 +69,19 @@ def save_bundle(estimated_bundle_idx, static_tractogram, step_size, out_filename
 	estimated_bundle = static_tractogram[estimated_bundle_idx]
 	
 	if extension == '.trk':
-		print("Saving bundle in %s" % out_filename)
-		
-		# Creating header
 		hdr = nib.streamlines.trk.TrkFile.create_empty_header()
 		hdr['voxel_sizes'] = voxel_sizes
-		hdr['voxel_order'] = 'LAS'
 		hdr['dimensions'] = dimensions
+		hdr['voxel_order'] = 'LAS'
 		hdr['voxel_to_rasmm'] = aff_vox_to_ras 
-
-		# Saving bundle
-		t = nib.streamlines.tractogram.Tractogram(estimated_bundle, affine_to_rasmm=aff_vox_to_ras)
-		nib.streamlines.save(t, out_filename, header=hdr)
-		print("Bundle saved in %s" % out_filename)
-
 	elif extension == '.tck':
-		print("Saving bundle in %s" % out_filename)
-
-		# Creating header
 		hdr = nib.streamlines.tck.TckFile.create_empty_header()
 		hdr['voxel_sizes'] = voxel_sizes
 		hdr['dimensions'] = dimensions
-		hdr['voxel_to_rasmm'] = aff_vox_to_ras
-
-		# Saving bundle
-		t = nib.streamlines.tractogram.Tractogram(estimated_bundle, affine_to_rasmm=np.eye(4))
-		nib.streamlines.save(t, out_filename, header=hdr)
-		print("Bundle saved in %s" % out_filename)
-
 	else:
 		print("%s format not supported." % extension)
+
+	t = nib.streamlines.tractogram.Tractogram(estimated_bundle, affine_to_rasmm=np.eye(4))
+	nib.streamlines.save(t, out_filename, header=hdr)
+	print("Bundle saved in %s" % out_filename)
+
