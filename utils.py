@@ -78,7 +78,7 @@ def save_bundle(estimated_bundle_idx, static_tractogram, step_size, out_filename
 		hdr['voxel_to_rasmm'] = aff_vox_to_ras 
 
 		# Saving bundle
-		t = nib.streamlines.tractogram.Tractogram(estimated_bundle, affine_to_rasmm=aff_vox_to_ras)
+		t = nib.streamlines.tractogram.Tractogram(estimated_bundle, affine_to_rasmm=np.eye(4))
 		nib.streamlines.save(t, out_filename, header=hdr)
 		print("Bundle saved in %s" % out_filename)
 
@@ -89,7 +89,6 @@ def save_bundle(estimated_bundle_idx, static_tractogram, step_size, out_filename
 		hdr = nib.streamlines.tck.TckFile.create_empty_header()
 		hdr['voxel_sizes'] = voxel_sizes
 		hdr['dimensions'] = dimensions
-		hdr['voxel_to_rasmm'] = aff_vox_to_ras
 
 		# Saving bundle
 		t = nib.streamlines.tractogram.Tractogram(estimated_bundle, affine_to_rasmm=np.eye(4))
