@@ -69,32 +69,19 @@ def save_bundle(estimated_bundle_idx, static_tractogram, step_size, out_filename
 	estimated_bundle = static_tractogram[estimated_bundle_idx]
 	
 	if extension == '.trk':
-		print("Saving bundle in %s" % out_filename)
-		
-		# Creating header
 		hdr = nib.streamlines.trk.TrkFile.create_empty_header()
 		hdr['voxel_sizes'] = voxel_sizes
-		hdr['voxel_order'] = 'LAS'
 		hdr['dimensions'] = dimensions
+		hdr['voxel_order'] = 'LAS'
 		hdr['voxel_to_rasmm'] = aff_vox_to_ras 
-
-		# Saving bundle
-		t = nib.streamlines.tractogram.Tractogram(estimated_bundle, affine_to_rasmm=np.eye(4))
-		nib.streamlines.save(t, out_filename, header=hdr)
-		print("Bundle saved in %s" % out_filename)
-
 	elif extension == '.tck':
-		print("Saving bundle in %s" % out_filename)
-
-		# Creating header
 		hdr = nib.streamlines.tck.TckFile.create_empty_header()
 		hdr['voxel_sizes'] = voxel_sizes
 		hdr['dimensions'] = dimensions
-
-		# Saving bundle
-		t = nib.streamlines.tractogram.Tractogram(estimated_bundle, affine_to_rasmm=np.eye(4))
-		nib.streamlines.save(t, out_filename, header=hdr)
-		print("Bundle saved in %s" % out_filename)
-
 	else:
 		print("%s format not supported." % extension)
+
+	t = nib.streamlines.tractogram.Tractogram(estimated_bundle, affine_to_rasmm=np.eye(4))
+	nib.streamlines.save(t, out_filename, header=hdr)
+	print("Bundle saved in %s" % out_filename)
+
