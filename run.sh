@@ -113,10 +113,18 @@ done
 echo "AFQ conversion of ground truth to trk"
 matlab -nosplash -nodisplay -r "afqConverter1()";
 
-
-echo "Coregistering ROIs on the target subject space"
-./mni_roi_registration.sh ${subjID} ${t1_static} AFQ
-
+wmc_tag=`jq -r '._inputs[5].datatype_tags[0]' config.json` 
+if [ $wmc_tag == 'afq' ]; then
+	echo "Coregistering ROIs on the target subject space"
+	./mni_roi_registration.sh ${subjID} ${t1_static} AFQ
+elif [ $wmc_tag == 'wmaSeg' ]; then
+	echo "Extracting endROIs of the minor tracts"
+	mkdir aligned_ROIs;
+	fsDir=`jq -r '.fsDir' config.json`
+	python extract_endrois_minor -region 'parietal' -fsDir ${fsDir} -t1 ${t1_static} -out_dir aligned_ROIs
+	python extract_endrois_minor -region 'temporal' -fsDir ${fsDir} -t1 ${t1_static} -out_dir aligned_ROIs
+	python extract_endrois_minor -region 'LatTemp' -fsDir ${fsDir} -t1 ${t1_static} -out_dir aligned_ROIs
+fi
 
 echo "Running anatomically-informed multi-LAP"
 mkdir tracts_tck;
