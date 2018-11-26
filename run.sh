@@ -121,9 +121,9 @@ elif [ $wmc_tag == 'wmaSeg' ]; then
 	echo "Extracting endROIs of the minor tracts"
 	mkdir aligned_ROIs;
 	fsDir=`jq -r '.fsDir' config.json`
-	python extract_endrois_minor -region 'parietal' -fsDir ${fsDir} -t1 ${t1_static} -out_dir aligned_ROIs
-	python extract_endrois_minor -region 'temporal' -fsDir ${fsDir} -t1 ${t1_static} -out_dir aligned_ROIs
-	python extract_endrois_minor -region 'LatTemp' -fsDir ${fsDir} -t1 ${t1_static} -out_dir aligned_ROIs
+	python extract_endrois_minor.py -region 'parietal' -fsDir ${fsDir} -t1 ${t1_static} -out_dir aligned_ROIs
+	python extract_endrois_minor.py -region 'temporal' -fsDir ${fsDir} -t1 ${t1_static} -out_dir aligned_ROIs
+	python extract_endrois_minor.py -region 'LatTemp' -fsDir ${fsDir} -t1 ${t1_static} -out_dir aligned_ROIs
 fi
 
 echo "Running anatomically-informed multi-LAP"
