@@ -93,9 +93,10 @@ def lap_single_example(moving_tractogram, static_tractogram, example, lD, lE, lR
 	np.random.seed(0)
 
 	with open('config.json') as f:
-            data = json.load(f)
+	    data = json.load(f)
 	    k = data["k"]
 	    step_size = data["step_size"]
+	    tag = data["_inputs"][5]["datatype_tags"][0].encode("utf-8")
 	distance_func = bundles_distances_mam
 
 	subjID = ntpath.basename(static_tractogram)[0:6]
@@ -135,10 +136,14 @@ def lap_single_example(moving_tractogram, static_tractogram, example, lD, lE, lR
 	table_filename = 'ROIs_labels_dictionary.pickle'
 	table = pickle.load(open(table_filename))
 	roi1_lab = table[tract_name].items()[0][1]
-	roi1_filename = 'aligned_ROIs/sub-%s_var-AFQ_lab-%s_roi.nii.gz' %(subjID, roi1_lab)
-	roi1 = nib.load(roi1_filename)
 	roi2_lab = table[tract_name].items()[1][1]
-	roi2_filename = 'aligned_ROIs/sub-%s_var-AFQ_lab-%s_roi.nii.gz' %(subjID, roi2_lab)
+	if tag == 'afq':
+		roi1_filename = 'aligned_ROIs/sub-%s_var-AFQ_lab-%s_roi.nii.gz' %(subjID, roi1_lab)
+		roi2_filename = 'aligned_ROIs/sub-%s_var-AFQ_lab-%s_roi.nii.gz' %(subjID, roi2_lab)
+	elif tag == 'wmaSeg':
+		roi1_filename = 'aligned_ROIs/%s.nii.gz' %roi1_lab
+		roi2_filename = 'aligned_ROIs/%s.nii.gz' %roi2_lab
+	roi1 = nib.load(roi1_filename)
 	roi2 = nib.load(roi2_filename)
 	
 	print("Computing matrices for LAP...")
