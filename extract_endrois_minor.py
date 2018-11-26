@@ -53,7 +53,7 @@ if __name__ == '__main__':
     subprocess.check_call(['mri_convert', mgzfile, niifile])
 
     print("Downsample the file nii file as the reference image.")
-    fsImg = '%s/mri/aparc.a2009s+aseg_1.25mm.nii.gz' %(args.fsDir)
+    fsImg = 'aparc.a2009s+aseg_1.25mm.nii.gz' %(args.fsDir)
     cmd = 'flirt -in %s -ref %s -out %s -interp nearestneighbour' %(niifile, args.t1, fsImg)
     os.system(cmd)
 
