@@ -11,6 +11,12 @@ import json
 from lap_single_example_anat import lap_single_example
 from utils import save_bundle
 
+try:
+    from joblib import Parallel, delayed
+    joblib_available = True
+except ImportError:
+    joblib_available = False
+
 
 def ranking_schema(superset_estimated_target_tract_idx, superset_estimated_target_tract_cost):
     """ Rank all the extracted streamlines estimated by the LAP with multiple examples   
@@ -34,29 +40,45 @@ def ranking_schema(superset_estimated_target_tract_idx, superset_estimated_targe
 def lap_multiple_examples(moving_tractograms_dir, static_tractogram, ex_dir, lD, lE, lR, out_filename):
 	"""Code for LAP from multiple examples.
 	"""
+	#moving_tractograms = os.listdir(moving_tractograms_dir)
+	#moving_tractograms.sort()
+	#examples = os.listdir(ex_dir)
+	#examples.sort()
+
+	#nt = len(moving_tractograms)
+	#ne = len(examples)
+
 	moving_tractograms = os.listdir(moving_tractograms_dir)
 	moving_tractograms.sort()
+	nt = len(moving_tractograms)
+	moving_tractograms = ['%s/' %moving_tractograms_dir + moving_tractograms[i] for i in range(nt)]
+
 	examples = os.listdir(ex_dir)
 	examples.sort()
-
-	nt = len(moving_tractograms)
 	ne = len(examples)
+	examples = ['%s/' %ex_dir + examples[i] for i in range(ne)]
 
 	if nt != ne:
 		print("Error: number of moving tractograms differs from number of example bundles.")
 		sys.exit()
 	else:	
-		result_lap = []
-		for i in range(nt):
-			moving_tractogram = '%s/%s' %(moving_tractograms_dir, moving_tractograms[i])
-			example = '%s/%s' %(ex_dir, examples[i])
-			tmp = np.array([lap_single_example(moving_tractogram, static_tractogram, example, lD, lE, lR)])
-			result_lap.append(tmp)
+		#result_lap = []
+		#for i in range(nt):
+		#	moving_tractogram = '%s/%s' %(moving_tractograms_dir, moving_tractograms[i])
+		#	example = '%s/%s' %(ex_dir, examples[i])
+		#	tmp = np.array([lap_single_example(moving_tractogram, static_tractogram, example, lD, lE, lR)])
+		#	result_lap.append(tmp)
 
-		result_lap = np.array(result_lap)
-		estimated_bundle_idx = np.hstack(result_lap[:,0,0])
-		min_cost_values = np.hstack(result_lap[:,0,1])
-		example_bundle_len_med = np.median(np.hstack(result_lap[:,0,2]))
+		#result_lap = np.array(result_lap)
+		#estimated_bundle_idx = np.hstack(result_lap[:,0,0])
+		#min_cost_values = np.hstack(result_lap[:,0,1])
+		#example_bundle_len_med = np.median(np.hstack(result_lap[:,0,2]))
+
+		result_lap = np.array(Parallel(n_jobs=-1)(delayed(lap_single_example)(moving_tractograms[i], static_tractogram, examples[i]) for i in range(nt)))
+
+		estimated_bundle_idx = np.hstack(result_lap[:,0]) 
+		min_cost_values = np.hstack(result_lap[:,1])
+		example_bundle_len_med = np.median(np.hstack(result_lap[:,2]))
 
 		print("Ranking the estimated streamlines...")
 		estimated_bundle_idx_ranked = ranking_schema(estimated_bundle_idx, min_cost_values)                      
