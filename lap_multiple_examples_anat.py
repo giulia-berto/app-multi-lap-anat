@@ -74,7 +74,7 @@ def lap_multiple_examples(moving_tractograms_dir, static_tractogram, ex_dir, lD,
 		#min_cost_values = np.hstack(result_lap[:,0,1])
 		#example_bundle_len_med = np.median(np.hstack(result_lap[:,0,2]))
 
-		result_lap = np.array(Parallel(n_jobs=-1)(delayed(lap_single_example)(moving_tractograms[i], static_tractogram, examples[i]) for i in range(nt)))
+		result_lap = np.array(Parallel(n_jobs=-1)(delayed(lap_single_example)(moving_tractograms[i], static_tractogram, examples[i], lD, lE, lR) for i in range(nt)))
 
 		estimated_bundle_idx = np.hstack(result_lap[:,0]) 
 		min_cost_values = np.hstack(result_lap[:,1])
