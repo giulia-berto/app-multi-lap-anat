@@ -49,11 +49,11 @@ if __name__ == '__main__':
 
     print("Convert the parcellation mgz file into nii format.")
     mgzfile = '%s/mri/aparc.a2009s+aseg.mgz' %(args.fsDir)
-    niifile = '%s/mri/aparc.a2009s+aseg.nii.gz' %(args.fsDir)
+    niifile = 'aparc.a2009s+aseg.nii.gz'
     subprocess.check_call(['mri_convert', mgzfile, niifile])
 
     print("Downsample the file nii file as the reference image.")
-    fsImg = 'aparc.a2009s+aseg_1.25mm.nii.gz' %(args.fsDir)
+    fsImg = 'aparc.a2009s+aseg_1.25mm.nii.gz' 
     cmd = 'flirt -in %s -ref %s -out %s -interp nearestneighbour' %(niifile, args.t1, fsImg)
     os.system(cmd)
 
