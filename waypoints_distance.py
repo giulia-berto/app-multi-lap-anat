@@ -7,6 +7,12 @@ import nibabel as nib
 from nibabel.affines import apply_affine 
 from scipy.spatial.distance import cdist
 
+try:
+    from joblib import Parallel, delayed, cpu_count
+    joblib_available = True
+except ImportError:
+    joblib_available = False
+
 
 def bundle2roi_distance(bundle, roi_mask, distance='euclidean'):
 	"""Compute the minimum euclidean distance between a
@@ -37,5 +43,35 @@ def bundles_distances_roi(bundle, superset, roi1, roi2):
 	for j in range(len(superset)):
             roi_matrix[i,j] = np.abs(np.subtract(roi_ex_vector[i], roi_vector[j]))
 	
+    return roi_matrix
+
+
+def wrapper_bundle2roi_distance(bundle, roi, n_jobs=-1):
+    
+    if joblib_available and n_jobs != 1:
+        if n_jobs is None or n_jobs == -1:
+            n_jobs = cpu_count()      
+    tmp = np.linspace(0, len(bundle), n_jobs + 1).astype(np.int)     
+    chunks = zip(tmp[:-1], tmp[1:])
+    roi_dist = np.hstack(Parallel(n_jobs=n_jobs)(delayed(bundle2roi_distance)(bundle[start:stop], roi) for start, stop in chunks))
+
+    return roi_dist.flatten()
+
+
+def bundles_distances_roi_fastest(bundle, superset, roi1, roi2):
+
+    roi1_dist = wrapper_bundle2roi_distance(superset, roi1)
+    roi2_dist = wrapper_bundle2roi_distance(superset, roi2)
+    roi_vector = np.add(roi1_dist, roi2_dist)
+    roi_matrix = np.zeros((len(bundle), len(superset)))
+    roi1_ex_dist = wrapper_bundle2roi_distance(bundle, roi1)
+    roi2_ex_dist = wrapper_bundle2roi_distance(bundle, roi2)
+    roi_ex_vector = np.add(roi1_ex_dist, roi2_ex_dist)
+
+    #subtraction
+    for i in range(len(bundle)):
+        for j in range(len(superset)):
+            roi_matrix[i,j] = np.abs(np.subtract(roi_ex_vector[i], roi_vector[j]))
+
     return roi_matrix
 
