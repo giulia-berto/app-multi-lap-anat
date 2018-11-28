@@ -69,10 +69,10 @@ def lap_multiple_examples(moving_tractograms_dir, static_tractogram, ex_dir, lD,
 			tmp = np.array([lap_single_example(moving_tractogram, static_tractogram, example, lD, lE, lR)])
 			result_lap.append(tmp)
 
-		#result_lap = np.array(result_lap)
-		#estimated_bundle_idx = np.hstack(result_lap[:,0,0])
-		#min_cost_values = np.hstack(result_lap[:,0,1])
-		#example_bundle_len_med = np.median(np.hstack(result_lap[:,0,2]))
+		result_lap = np.array(result_lap)
+		estimated_bundle_idx = np.hstack(result_lap[:,0,0])
+		min_cost_values = np.hstack(result_lap[:,0,1])
+		example_bundle_len_med = np.median(np.hstack(result_lap[:,0,2]))
 
 		#result_lap = np.array(Parallel(n_jobs=-1)(delayed(lap_single_example)(moving_tractograms[i], static_tractogram, examples[i], lD, lE, lR) for i in range(nt)))
 
@@ -81,7 +81,7 @@ def lap_multiple_examples(moving_tractograms_dir, static_tractogram, ex_dir, lD,
 		#example_bundle_len_med = np.median(np.hstack(result_lap[:,2]))
 
 		print("Ranking the estimated streamlines...")
-		estimated_bundle_idx_ranked = ranking_schema(estimated_bundle_idx, min_cost_values)                      
+		estimated_bundle_idx_ranked = ranking_schema(estimated_bundle_idx, min_cost_values)
 
 		print("Extracting the estimated bundle...")
 		estimated_bundle_idx_ranked_med = estimated_bundle_idx_ranked[0:int(example_bundle_len_med)]
