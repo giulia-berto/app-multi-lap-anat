@@ -8,20 +8,19 @@
 import os
 import sys
 import argparse
-import os.path
 import nibabel as nib
 import numpy as np
-import pickle
-from os.path import isfile
 import ntpath
 from nibabel.streamlines import load
 from dipy.segment.clustering import QuickBundles
 from dipy.align.streamlinear import StreamlineLinearRegistration
 from dipy.tracking.streamline import set_number_of_points
-from dipy.tracking.utils import length
 
 
 def tractograms_slr(moving_tractogram, static_tractogram):
+
+	subjID = ntpath.basename(static_tractogram)[0:6]
+	exID = ntpath.basename(moving_tractogram)[0:6]
 
 	print("Loading tractograms...")
 	moving_tractogram = nib.streamlines.load(moving_tractogram)
@@ -54,7 +53,8 @@ def tractograms_slr(moving_tractogram, static_tractogram):
 	affine = srm.matrix
 	print('%s' %affine)
 
-	return affine
+	np.save('affine_m%s_s%s.npy' %(exID, subjID), affine)
+	print("Affine for example %s and target %s saved." %(exID, subjID))
 
 
 if __name__ == '__main__':
@@ -66,6 +66,6 @@ if __name__ == '__main__':
 	                    help='The static tractogram filename')                 
 	args = parser.parse_args()
 
-	affine = tractograms_slr(args.moving, args.static)	
+	tractograms_slr(args.moving, args.static)	
 	                            
 	sys.exit()    

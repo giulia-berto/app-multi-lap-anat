@@ -88,6 +88,35 @@ else
 fi
 
 
+echo "SLR registration"
+
+i=1
+id_mov=$(jq -r "._inputs[1+$i+$num_ex].meta.subject" config.json | tr -d "_")
+tractogram_moving=tractograms_directory/$id_mov'_track.trk'
+python tractogram_slr -moving $tractogram_moving -static $subjID'_track.trk'
+echo "SLR registration of the first example done."
+
+for i in seq 2 3;
+do
+	id_mov=$(jq -r "._inputs[1+$i+$num_ex].meta.subject" config.json | tr -d "_")
+	tractogram_moving=tractograms_directory/$id_mov'_track.trk'
+	python tractogram_slr.py -moving $tractogram_moving -static $subjID'_track.trk' &
+done
+echo "Waiting for SLR registration of example 2 and 3 to finish"
+wait
+echo "SLR registration of example 2 and 3 done."
+
+for i in seq 4 5;
+do
+	id_mov=$(jq -r "._inputs[1+$i+$num_ex].meta.subject" config.json | tr -d "_")
+	tractogram_moving=tractograms_directory/$id_mov'_track.trk'
+	python tractogram_slr.py -moving $tractogram_moving -static $subjID'_track.trk' &
+done
+echo "Waiting for SLR registration of example 4 and 5 to finish"
+wait
+echo "SLR registration of example 4 and 5 done."
+
+
 echo "AFQ conversion to trk"
 for i in `seq 1 $num_ex`; 
 do
