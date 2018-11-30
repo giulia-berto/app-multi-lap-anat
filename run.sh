@@ -96,32 +96,6 @@ do
 	python tractograms_slr.py -moving $tractogram_moving -static $subjID'_track.trk'
 done
 
-#i=1
-#id_mov=$(jq -r "._inputs[1+$i+$num_ex].meta.subject" config.json | tr -d "_")
-#tractogram_moving=tractograms_directory/$id_mov'_track.trk'
-#python tractograms_slr.py -moving $tractogram_moving -static $subjID'_track.trk'
-#echo "SLR registration of the first example done."
-
-#for i in 2 3;
-#do
-#	id_mov=$(jq -r "._inputs[1+$i+$num_ex].meta.subject" config.json | tr -d "_")
-#	tractogram_moving=tractograms_directory/$id_mov'_track.trk'
-#	python tractograms_slr.py -moving $tractogram_moving -static $subjID'_track.trk' &
-#done
-#echo "Waiting for SLR registration of example 2 and 3 to finish"
-#wait
-#echo "SLR registration of example 2 and 3 done."
-
-#for i in 4 5;
-#do
-#	id_mov=$(jq -r "._inputs[1+$i+$num_ex].meta.subject" config.json | tr -d "_")
-#	tractogram_moving=tractograms_directory/$id_mov'_track.trk'
-#	python tractograms_slr.py -moving $tractogram_moving -static $subjID'_track.trk' &
-#done
-#echo "Waiting for SLR registration of example 4 and 5 to finish"
-#wait
-#echo "SLR registration of example 4 and 5 done."
-
 
 echo "AFQ conversion to trk"
 for i in `seq 1 $num_ex`; 
@@ -189,7 +163,7 @@ if [ ${multi_LAP} == true ]; then
 		echo "Tract name: $tract_name"; 
 		base_name=$tract_name'_tract'
 		output_filename=tracts_tck/${subjID}_${base_name}_${run}.tck
-		python lap_multiple_examples_anat.py -moving_dir tractograms_directory -static $subjID'_track.trk' -ex_dir examples_directory_$tract_name -lD 1 -lE 0 -lR 0 -out $output_filename;
+		python lap_multiple_examples.py -moving_dir tractograms_directory -static $subjID'_track.trk' -ex_dir examples_directory_$tract_name -out $output_filename;
 
 	done < tract_name_list.txt
 fi

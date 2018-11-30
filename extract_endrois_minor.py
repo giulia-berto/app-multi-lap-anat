@@ -6,6 +6,7 @@ import argparse
 import nibabel as nib
 import numpy as np
 import subprocess
+from os.path import isfile
 
 
 def nifti_from_FSlabels(labels, fsImg, out_name):
@@ -47,15 +48,17 @@ if __name__ == '__main__':
 	                    help='The output directory')                         
     args = parser.parse_args()
 
-    print("Convert the parcellation mgz file into nii format.")
-    mgzfile = '%s/mri/aparc.a2009s+aseg.mgz' %(args.fsDir)
-    niifile = 'aparc.a2009s+aseg.nii.gz'
-    subprocess.check_call(['mri_convert', mgzfile, niifile])
+    fsImg = 'aparc.a2009s+aseg_1.25mm.nii.gz'
 
-    print("Downsample the file nii file as the reference image.")
-    fsImg = 'aparc.a2009s+aseg_1.25mm.nii.gz' 
-    cmd = 'flirt -in %s -ref %s -out %s -interp nearestneighbour' %(niifile, args.t1, fsImg)
-    os.system(cmd)
+    if isfile(fsImg) == False:
+    	print("Convert the parcellation mgz file into nii format.")
+    	mgzfile = '%s/mri/aparc.a2009s+aseg.mgz' %(args.fsDir)
+    	niifile = 'aparc.a2009s+aseg.nii.gz'
+    	subprocess.check_call(['mri_convert', mgzfile, niifile])
+
+    	print("Downsample the file nii file as the reference image.") 
+    	cmd = 'flirt -in %s -ref %s -out %s -interp nearestneighbour' %(niifile, args.t1, fsImg)
+    	os.system(cmd)
 
     if args.region == 'parietal':
 	labels = [157, 127, 168, 136, 126, 125]
