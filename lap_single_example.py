@@ -30,14 +30,14 @@ except ImportError:
 def RLAP(kdt, k, dm_source_tract, source_tract, tractogram, distance, exID, subjID):
     """Code for Rectangular Linear Assignment Problem.
     """
-    
+    tractogram = np.array(tractogram, dtype=np.object)
+    D, I = kdt.query(dm_source_tract, k=k)
+    superset = np.unique(I.flat)
+
     if isfile('distance_matrix_m%s_s%s.npy' %(exID, subjID)):
 	print("Retrieving distance matrix for example %s and target %s." %(exID, subjID))
 	cost_matrix = np.load('distance_matrix_m%s_s%s.npy' %(exID, subjID))
     else:
-	tractogram = np.array(tractogram, dtype=np.object)
-    	D, I = kdt.query(dm_source_tract, k=k)
-    	superset = np.unique(I.flat)
     	print("Computing the cost matrix (%s x %s) for RLAP... " % (len(source_tract), len(superset)))
     	cost_matrix = dissimilarity(source_tract, tractogram[superset], distance)
 
