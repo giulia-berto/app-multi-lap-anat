@@ -93,7 +93,7 @@ for i in `seq 1 $num_ex`;
 do
 	id_mov=$(jq -r "._inputs[1+$i+$num_ex].meta.subject" config.json | tr -d "_")
 	tractogram_moving=tractograms_directory/$id_mov'_track.trk'
-	#python tractograms_slr.py -moving $tractogram_moving -static $subjID'_track.trk'
+	python tractograms_slr.py -moving $tractogram_moving -static $subjID'_track.trk'
 done
 
 
