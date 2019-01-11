@@ -1,4 +1,1 @@
-This is the code for anatomically-informed Bundle segmentation as multiple Linear Assignment Problem (LAP).
-
-Cython code for linear assignment can be compiled with:
-python setup_lapjv.py build_ext --inplace
+This is the code for "Anatomically-Informed Multiple Linear Assignment Problems for White Matter Bundle Segmentation", Giulia Bertò, Paolo Avesani, Franco Pestilli, Daniel Bullock, Bradley Caron, Emanuele Olivetti, accepted at the 16th IEEE International Symposium on Biomedical Imaging (ISBI) 2019.
