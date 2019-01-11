@@ -3,7 +3,7 @@
 ### app-multi-lap-anat
 This app segments white matter tracts by solving Anatomically-Informed multiple Linear Assignment Problems (LAP-anat).
 
-![](lap-anat.png)
+![](LAP-anat.png)
 
 ### Authors
 - Giulia Bertò (gberto@fbk.eu)
