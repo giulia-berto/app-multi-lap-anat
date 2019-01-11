@@ -18,7 +18,7 @@ from dissimilarity import compute_dissimilarity, dissimilarity
 from dipy.tracking.distances import bundles_distances_mam
 from utils import resample_tractogram, compute_superset, compute_kdtree_and_dr_tractogram, save_bundle
 from endpoints_distance import bundles_distances_endpoints_fastest
-from waypoints_distance import bundles_distances_roi
+from waypoints_distance import bundles_distances_roi_fastest
 
 
 try:
@@ -56,7 +56,7 @@ def compute_lap_matrices(superset_idx, source_tract, tractogram, roi1, roi2, sub
 
 	print("Computing the waypoint matrix (%s x %s) for RLAP... " % (len(source_tract), len(superset_idx)))
 	t2=time.time()
-	roi_matrix = bundles_distances_roi(source_tract, tractogram[superset_idx], roi1, roi2)
+	roi_matrix = bundles_distances_roi_fastest(source_tract, tractogram[superset_idx], roi1, roi2)
 	roi_matrix = roi_matrix * 0.5
 	print("Time for computing the waypoint matrix = %s seconds" %(time.time()-t2))
 
