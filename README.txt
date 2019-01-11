@@ -1,1 +1,0 @@
-This is the code for "Anatomically-Informed Multiple Linear Assignment Problems for White Matter Bundle Segmentation", Giulia Bertò, Paolo Avesani, Franco Pestilli, Daniel Bullock, Bradley Caron, Emanuele Olivetti, accepted at the 16th IEEE International Symposium on Biomedical Imaging (ISBI) 2019.
