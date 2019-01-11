@@ -19,7 +19,7 @@ This app segments white matter tracts by solving Anatomically-Informed multiple 
 On [BrainLife.io](http://brainlife.io/) \
 You can submit this App online at https://doi.org/10.25663/brainlife.app.122 via the “Execute” tab.
 
-Branch 1.0:
+Branch 1.0: \
 The segmentation files you have to provide as examples should be obtained using the AFQ algorithm (https://doi.org/10.25663/bl.app.13). \
 You can choose the tract to be segmented by providing the id related to the AFQ segmentation as follows: \
 1 - Left Thalamic Radiation \
