@@ -22,6 +22,11 @@ export PYTHONPATH=/N/u/brlife/git/nibabel:$PYTHONPATH
 #execute app
 ./run.sh
 
+ret=$?
+if [ ! $ret -eq 0 ]; then
+	exit $ret
+fi
+
 #removing files
 rm *.trk -f
 rm *.tck -f
