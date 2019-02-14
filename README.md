@@ -1,7 +1,7 @@
 [![Run on Brainlife.io](https://img.shields.io/badge/Brainlife-bl.app.122-blue.svg)](https://doi.org/10.25663/brainlife.app.122)
 
 ### app-multi-lap-anat
-This app segments white matter bundles by solving Anatomically-Informed multiple Linear Assignment Problems (multi-LAP-anat). The method is a supervised example-based segmentation method and thus requires multiple bundles of examples to learn from. The segmentation is performed by means of fiber correspondence across subjects by considering both the shape of the fibers and their relative anatomical position.
+This app segments white matter bundles by solving Anatomically-Informed multiple Linear Assignment Problems (multi-LAP-anat). The method is a supervised example-based segmentation method and thus requires multiple bundles as examples to learn from. The segmentation is performed by means of fiber correspondence across subjects by considering both the shape of the fibers and their relative anatomical position.
 
 ![](LAP-anat.png)
 
@@ -50,7 +50,7 @@ You can choose the bundle to be segmented (one at the time) by providing the id 
 20 - Right Arcuate 
 
 Branch 2.0: \
-In addition to the functionality of Branch 1.0, you may also provide as examples the wmc segmentation obtained using the WMA algorithm (https://doi.org/10.25663/bl.app.41). In this case you have also to provide the freesufer parcellation file. \
+In addition to use as examples AFQ wmc segmentations, you may also provide as examples the wmc segmentation obtained using the WMA algorithm (https://doi.org/10.25663/bl.app.41). In this case you have also to provide the freesufer parcellation file, which can be obtained by running the app https://doi.org/10.25663/bl.app.0. \
 You can choose the bundle to be segmented (one at the time) by providing the id related to the WMA segmentation as follows: \
 38 - Left pArc \
 39 - Right pArc \
@@ -60,4 +60,3 @@ You can choose the bundle to be segmented (one at the time) by providing the id 
 43 - Right MdLF-SPL \
 44 - Left MdLF-Ang \
 45 - Right MdLF-Ang 
-
