@@ -122,7 +122,7 @@ done
 echo "AFQ conversion of ground truth to trk"
 matlab -nosplash -nodisplay -r "afqConverter1()";
 
-wmc_tag=`jq -r '._inputs[5].datatype_tags[0]' config.json` 
+wmc_tag=`jq -r '._inputs[2].datatype_tags[0]' config.json` 
 if [ $wmc_tag == 'afq' ]; then
 	echo "Coregistering ROIs on the target subject space"
 	./mni_roi_registration.sh ${subjID} ${t1_static} AFQ
