@@ -49,7 +49,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     fsImg = 'aparc.a2009s+aseg_1.25mm.nii.gz'
-
+	print('%s' %args.fsDir)
     if isfile(fsImg) == False:
     	print("Convert the parcellation mgz file into nii format.")
     	mgzfile = '%s/mri/aparc.a2009s+aseg.mgz' %(args.fsDir)
