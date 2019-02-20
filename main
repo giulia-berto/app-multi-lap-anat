@@ -8,13 +8,15 @@ module load ants
 module unload matlab
 module load matlab/2017a
 #module load spm/8
-#module unload python
+module unload python
 module load dipy/dev
 module load nodejs
 module unload mrtrix/0.2.12 
-module load mrtrix/0.3.15
+module load mrtrix/0.3
 module unload fsl
 module load fsl/5.0.9
+module unload freesurfer/5.3.0
+module unload freesurfer/6.0.0
 echo "Finished loading modules"
 
 export PYTHONPATH=/N/u/brlife/git/nibabel:$PYTHONPATH
