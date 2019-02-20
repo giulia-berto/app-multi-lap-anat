@@ -7,8 +7,8 @@ echo "Loading modules"
 module load ants
 module unload matlab
 module load matlab/2017a
-module load spm/8
-module unload python
+#module load spm/8
+#module unload python
 module load dipy/dev
 module load nodejs
 module unload mrtrix/0.2.12 
