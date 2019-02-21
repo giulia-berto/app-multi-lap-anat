@@ -38,8 +38,8 @@ def compute_lap_matrices(superset_idx, source_tract, tractogram, roi1, roi2, sub
 	"""Code for computing the inputs to the MODIFIED Rectangular Linear Assignment Problem.
 	"""
 	with open('config.json') as f:
-        data = json.load(f)
-	    norm_mat = data["norm_mat"]
+		data = json.load(f)
+	norm_mat = data["norm_mat"]
 	distance = bundles_distances_mam
 	tractogram = np.array(tractogram, dtype=np.object)
 	
@@ -54,10 +54,10 @@ def compute_lap_matrices(superset_idx, source_tract, tractogram, roi1, roi2, sub
 		print("Time for computing the distance matrix = %s seconds" %(time.time()-t0))
 	
 	print("Computing the endpoint matrix (%s x %s) for RLAP... " % (len(source_tract), len(superset_idx)))
-    t1=time.time()
-    endpoint_matrix = bundles_distances_endpoints_fastest(source_tract, tractogram[superset_idx])
+	t1=time.time()
+	endpoint_matrix = bundles_distances_endpoints_fastest(source_tract, tractogram[superset_idx])
 	endpoint_matrix = endpoint_matrix * 0.5
-    print("Time for computing the endpoint matrix = %s seconds" %(time.time()-t1))
+	print("Time for computing the endpoint matrix = %s seconds" %(time.time()-t1))
 
 	print("Computing the waypoint matrix (%s x %s) for RLAP... " % (len(source_tract), len(superset_idx)))
 	t2=time.time()
@@ -192,7 +192,7 @@ if __name__ == '__main__':
 	if args.out:
 		estimated_bundle_idx = result_lap[0]
 		with open('config.json') as f:
-            	data = json.load(f)
+            		data = json.load(f)
 	    		step_size = data["step_size"]
 		save_bundle(estimated_bundle_idx, args.static, step_size, args.out)
 
