@@ -18,8 +18,7 @@ from dissimilarity import compute_dissimilarity, dissimilarity
 from dipy.tracking.distances import bundles_distances_mam
 from utils import resample_tractogram, compute_superset, compute_kdtree_and_dr_tractogram, save_bundle
 from endpoints_distance import bundles_distances_endpoints_fastest
-from waypoints_distance import bundles_distances_roi_fastest
-
+from waypoints_distance import bundles_distances_roi_fastest, bundles_distances_roi
 
 try:
     from linear_assignment import LinearAssignment
@@ -28,12 +27,18 @@ except ImportError:
     print("WARNING: See README.txt")
     from linear_assignment_numpy import LinearAssignment 
 
+try:
+    from joblib import Parallel, delayed, cpu_count
+    joblib_available = True
+except ImportError:
+    joblib_available = False
+
 
 def compute_lap_matrices(superset_idx, source_tract, tractogram, roi1, roi2, subjID, exID):
 	"""Code for computing the inputs to the MODIFIED Rectangular Linear Assignment Problem.
 	"""
 	with open('config.json') as f:
-            data = json.load(f)
+        data = json.load(f)
 	    norm_mat = data["norm_mat"]
 	distance = bundles_distances_mam
 	tractogram = np.array(tractogram, dtype=np.object)
@@ -49,14 +54,17 @@ def compute_lap_matrices(superset_idx, source_tract, tractogram, roi1, roi2, sub
 		print("Time for computing the distance matrix = %s seconds" %(time.time()-t0))
 	
 	print("Computing the endpoint matrix (%s x %s) for RLAP... " % (len(source_tract), len(superset_idx)))
-    	t1=time.time()
-    	endpoint_matrix = bundles_distances_endpoints_fastest(source_tract, tractogram[superset_idx])
+    t1=time.time()
+    endpoint_matrix = bundles_distances_endpoints_fastest(source_tract, tractogram[superset_idx])
 	endpoint_matrix = endpoint_matrix * 0.5
-    	print("Time for computing the endpoint matrix = %s seconds" %(time.time()-t1))
+    print("Time for computing the endpoint matrix = %s seconds" %(time.time()-t1))
 
 	print("Computing the waypoint matrix (%s x %s) for RLAP... " % (len(source_tract), len(superset_idx)))
 	t2=time.time()
-	roi_matrix = bundles_distances_roi_fastest(source_tract, tractogram[superset_idx], roi1, roi2)
+	if joblib_available:
+		roi_matrix = bundles_distances_roi_fastest(source_tract, tractogram[superset_idx], roi1, roi2)
+	else:
+		roi_matrix = bundles_distances_roi(source_tract, tractogram[superset_idx], roi1, roi2)
 	roi_matrix = roi_matrix * 0.5
 	print("Time for computing the waypoint matrix = %s seconds" %(time.time()-t2))
 
@@ -184,7 +192,7 @@ if __name__ == '__main__':
 	if args.out:
 		estimated_bundle_idx = result_lap[0]
 		with open('config.json') as f:
-            		data = json.load(f)
+            	data = json.load(f)
 	    		step_size = data["step_size"]
 		save_bundle(estimated_bundle_idx, args.static, step_size, args.out)
 
