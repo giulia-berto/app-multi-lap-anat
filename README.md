@@ -1,7 +1,7 @@
 [![Run on Brainlife.io](https://img.shields.io/badge/Brainlife-bl.app.122-blue.svg)](https://doi.org/10.25663/brainlife.app.122)
 
 ### app-multi-lap-anat
-This app segments white matter bundles by solving Anatomically-Informed multiple Linear Assignment Problems (multi-LAP-anat). The method is a supervised example-based segmentation method and thus requires multiple bundles as examples to learn from. The segmentation is performed by means of fiber correspondence across subjects by considering both the shape of the fibers and their relative anatomical position.
+This app segments white matter bundles by solving Anatomically-Informed multiple Linear Assignment Problems (multi-LAP-anat). The method is a supervised example-based segmentation method, and thus requires multiple bundles as examples to learn from. The segmentation is performed by means of fiber correspondence across subjects by considering both the shape of the fibers and their relative anatomical position.
 
 ![](LAP-anat.png)
 
@@ -20,10 +20,10 @@ On [BrainLife.io](http://brainlife.io/) \
 You can submit this App online at https://doi.org/10.25663/brainlife.app.122 via the “Execute” tab.
 
 Inputs: \
-You have to provide the tractogram of the (target) subject you want to extract the bundle from and wmc segmentations of multiple (example) subjects you want to learn from. The tractograms of the (example) subjects are needed to perform an initial Streamline Linear Registration (SLR) between tractograms.  
+To perfform the bundle segmentation, you need two key elements: (i) the tractogram of the (target) subject you want to extract the bundle from and (ii) the wmc segmentations of multiple (example) subjects you want to learn from. Moreover, the tractograms of the (example) subjects have to be provided to perform an initial Streamline Linear Registration (SLR) between tractograms.  
 
 Output: \
-You will get the wmc segmentation of the bundle of intereset of the target subject.
+You will get the wmc segmentation of the (single) bundle of interest in the target subject.
 
 Branch 1.0: \
 The wmc segmentation files you have to provide as examples should be obtained using the AFQ algorithm (https://doi.org/10.25663/bl.app.13). \
@@ -49,7 +49,7 @@ You can choose the bundle to be segmented (one at the time) by providing the id 
 19 - Left Arcuate \
 20 - Right Arcuate 
 
-Branch 2.0: \
+Branch 1.1: \
 In addition to use as examples AFQ wmc segmentations, you may also provide as examples the wmc segmentation obtained using the WMA algorithm (https://doi.org/10.25663/bl.app.41). In this case you have also to provide the freesufer parcellation file, which can be obtained by running the app https://doi.org/10.25663/bl.app.0. \
 You can choose the bundle to be segmented (one at the time) by providing the id related to the WMA segmentation as follows: \
 38 - Left pArc \
