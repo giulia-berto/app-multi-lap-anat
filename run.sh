@@ -141,7 +141,6 @@ else
 fi
 
 echo "Build partial tractogram"
-run=multi-LAPanat
 output_filename=${subjID}'_var-partial_tract_'${run}'.tck';
 python build_partial_tractogram.py -tracts_tck_dir 'tracts_tck' -out ${output_filename};
 if [ -f ${output_filename} ]; then 
