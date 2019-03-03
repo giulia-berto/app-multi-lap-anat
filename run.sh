@@ -10,8 +10,6 @@ t1s=`jq -r '.t1s_moving' config.json`
 lambdaD=`jq -r '.lambdaD' config.json`
 lambdaE=`jq -r '.lambdaE' config.json`
 lambdaR=`jq -r '.lambdaR' config.json`
-multi_LAP=`jq -r '.multi_LAP' config.json`
-true_segmentation=`jq -r '.true_segmentation' config.json`
 
 # Building arrays
 arr_seg=()
@@ -119,8 +117,6 @@ do
 	done < tract_name_list.txt
 
 done
-echo "AFQ conversion of ground truth to trk"
-matlab -nosplash -nodisplay -r "afqConverter1()";
 
 wmc_tag=`jq -r '._inputs[2].datatype_tags[0]' config.json` 
 if [ $wmc_tag == 'afq' ]; then
@@ -134,6 +130,7 @@ elif [ $wmc_tag == 'wmaSeg' ]; then
 	python extract_endrois_minor.py -region 'temporal' -fsDir ${fsDir} -t1 ${t1_static} -out_dir aligned_ROIs
 	python extract_endrois_minor.py -region 'LatTemp' -fsDir ${fsDir} -t1 ${t1_static} -out_dir aligned_ROIs
 fi
+
 
 echo "Running anatomically-informed multi-LAP"
 mkdir tracts_tck;
@@ -152,20 +149,6 @@ if [ -z "$(ls -A -- "tracts_tck")" ]; then
 	exit 1
 else    
 	echo "multi-LAPanat done."
-fi
-
-if [ ${multi_LAP} == true ]; then
-
-	run=multi-LAP
-	echo "Running multi-LAP"
-	
-	while read tract_name; do
-		echo "Tract name: $tract_name"; 
-		base_name=$tract_name'_tract'
-		output_filename=tracts_tck/${subjID}_${base_name}_${run}.tck
-		python lap_multiple_examples.py -moving_dir tractograms_directory -static $subjID'_track.trk' -ex_dir examples_directory_$tract_name -out $output_filename;
-
-	done < tract_name_list.txt
 fi
 
 
@@ -189,17 +172,6 @@ if [ -f 'output.mat' ]; then
 else 
 	echo "WMC structure missing."
 	exit 1
-fi
-
-
-echo "Computing voxel measures"
-python compute_dsc.py -sub $subjID -list 'tract_name_list.txt';
-
-ret=$?
-if [ ! $ret -eq 0 ]; then
-	echo "DSC computation failed"
-	echo $ret > finished
-	exit $ret
 fi
 
 echo "Complete"
