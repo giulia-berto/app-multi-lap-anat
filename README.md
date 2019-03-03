@@ -20,7 +20,7 @@ On [BrainLife.io](http://brainlife.io/) \
 You can submit this App online at https://doi.org/10.25663/brainlife.app.122 via the “Execute” tab.
 
 Inputs: \
-To perfform the bundle segmentation, you need two key elements: (i) the tractogram of the (target) subject you want to extract the bundle from and (ii) the wmc segmentations of multiple (example) subjects you want to learn from. Moreover, the tractograms of the (example) subjects have to be provided to perform an initial Streamline Linear Registration (SLR) between tractograms.  
+To perform the bundle segmentation, you need two key elements: (i) the tractogram of the (target) subject you want to extract the bundle from and (ii) the wmc segmentations of multiple (example) subjects you want to learn from. Moreover, you have to provide the anatomical T1s and the tractograms of the (example) subjects (which are used to apply an initial Streamline Linear Registration (SLR) between tractograms).  
 
 Output: \
 You will get the wmc segmentation of the (single) bundle of interest in the target subject.
