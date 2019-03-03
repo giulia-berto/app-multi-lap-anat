@@ -37,12 +37,6 @@ else
 	exit 1
 fi
 done
-id_true=$(jq -r "._inputs[2+$num_ex+$num_ex+$num_ex].meta.subject" config.json | tr -d "_")
-if [ ! $subjID == $id_true ]; then
-echo "Inputs subject id incorrectly inserted. Check them again."
-	exit 1
-fi
-
 
 echo "Building LAP environment"
 if [ -f "linear_assignment.c" ];then
@@ -58,7 +52,6 @@ else
 		exit $ret
 	fi
 fi
-
 
 echo "Tractogram conversion to trk"
 mkdir tractograms_directory;
@@ -77,14 +70,12 @@ if [[ $static == *.tck ]];then
 	done
 fi
 
-
 if [ -z "$(ls -A -- "tractograms_directory")" ]; then    
 	echo "tractograms_directory is empty."; 
 	exit 1;
 else    
 	echo "tractograms_directory created."; 
 fi
-
 
 echo "SLR registration"
 for i in `seq 1 $num_ex`; 
@@ -93,7 +84,6 @@ do
 	tractogram_moving=tractograms_directory/$id_mov'_track.trk'
 	python tractograms_slr.py -moving $tractogram_moving -static $subjID'_track.trk'
 done
-
 
 echo "AFQ conversion to trk"
 for i in `seq 1 $num_ex`; 
@@ -131,7 +121,6 @@ elif [ $wmc_tag == 'wmaSeg' ]; then
 	python extract_endrois_minor.py -region 'LatTemp' -fsDir ${fsDir} -t1 ${t1_static} -out_dir aligned_ROIs
 fi
 
-
 echo "Running anatomically-informed multi-LAP"
 mkdir tracts_tck;
 run=multi-LAPanat	
@@ -150,7 +139,6 @@ if [ -z "$(ls -A -- "tracts_tck")" ]; then
 else    
 	echo "multi-LAPanat done."
 fi
-
 
 echo "Build partial tractogram"
 run=multi-LAPanat
