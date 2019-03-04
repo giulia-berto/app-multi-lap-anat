@@ -37,6 +37,10 @@ else
 	exit 1
 fi
 done
+if [ ! $subjID == `jq -r '._inputs[2+$num_ex+$num_ex+$num_ex].meta.subject' config.json` ]; then
+echo "Inputs subject id incorrectly inserted. Check them again."
+	exit 1
+fi
 
 echo "Building LAP environment"
 if [ -f "linear_assignment.c" ];then
