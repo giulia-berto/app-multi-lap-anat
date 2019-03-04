@@ -10,8 +10,6 @@ t1s=`jq -r '.t1s_moving' config.json`
 lambdaD=`jq -r '.lambdaD' config.json`
 lambdaE=`jq -r '.lambdaE' config.json`
 lambdaR=`jq -r '.lambdaR' config.json`
-multi_LAP=`jq -r '.multi_LAP' config.json`
-true_segmentation=`jq -r '.true_segmentation' config.json`
 
 # Building arrays
 arr_seg=()
@@ -39,12 +37,6 @@ else
 	exit 1
 fi
 done
-id_true=$(jq -r "._inputs[2+$num_ex+$num_ex+$num_ex].meta.subject" config.json | tr -d "_")
-if [ ! $subjID == $id_true ]; then
-echo "Inputs subject id incorrectly inserted. Check them again."
-	exit 1
-fi
-
 
 echo "Building LAP environment"
 if [ -f "linear_assignment.c" ];then
@@ -60,7 +52,6 @@ else
 		exit $ret
 	fi
 fi
-
 
 echo "Tractogram conversion to trk"
 mkdir tractograms_directory;
@@ -79,14 +70,12 @@ if [[ $static == *.tck ]];then
 	done
 fi
 
-
 if [ -z "$(ls -A -- "tractograms_directory")" ]; then    
 	echo "tractograms_directory is empty."; 
 	exit 1;
 else    
 	echo "tractograms_directory created."; 
 fi
-
 
 echo "AFQ conversion to trk"
 for i in `seq 1 $num_ex`; 
@@ -110,13 +99,9 @@ do
 	done < tract_name_list.txt
 
 done
-echo "AFQ conversion of ground truth to trk"
-matlab -nosplash -nodisplay -r "afqConverter1()";
-
 
 echo "Coregistering ROIs on the target subject space"
 ./mni_roi_registration.sh ${subjID} ${t1_static} AFQ
-
 
 echo "Running anatomically-informed multi-LAP"
 mkdir tracts_tck;
@@ -136,21 +121,6 @@ if [ -z "$(ls -A -- "tracts_tck")" ]; then
 else    
 	echo "multi-LAPanat done."
 fi
-
-if [ ${multi_LAP} == true ]; then
-
-	run=multi-LAP
-	echo "Running multi-LAP"
-	
-	while read tract_name; do
-		echo "Tract name: $tract_name"; 
-		base_name=$tract_name'_tract'
-		output_filename=tracts_tck/${subjID}_${base_name}_${run}.tck
-		python lap_multiple_examples_anat.py -moving_dir tractograms_directory -static $subjID'_track.trk' -ex_dir examples_directory_$tract_name -lD 1 -lE 0 -lR 0 -out $output_filename;
-
-	done < tract_name_list.txt
-fi
-
 
 echo "Build partial tractogram"
 run=multi-LAPanat
@@ -172,17 +142,6 @@ if [ -f 'output.mat' ]; then
 else 
 	echo "WMC structure missing."
 	exit 1
-fi
-
-
-echo "Computing voxel measures"
-python compute_dsc.py -sub $subjID -list 'tract_name_list.txt';
-
-ret=$?
-if [ ! $ret -eq 0 ]; then
-	echo "DSC computation failed"
-	echo $ret > finished
-	exit $ret
 fi
 
 echo "Complete"
