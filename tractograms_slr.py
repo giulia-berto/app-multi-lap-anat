@@ -11,6 +11,8 @@ import argparse
 import nibabel as nib
 import numpy as np
 import ntpath
+from os.path import isfile
+from shutil import copyfile
 from nibabel.streamlines import load
 from dipy.segment.clustering import QuickBundles
 from dipy.align.streamlinear import StreamlineLinearRegistration
@@ -22,39 +24,48 @@ def tractograms_slr(moving_tractogram, static_tractogram):
 	subjID = ntpath.basename(static_tractogram)[0:6]
 	exID = ntpath.basename(moving_tractogram)[0:6]
 
-	print("Loading tractograms...")
-	moving_tractogram = nib.streamlines.load(moving_tractogram)
-	moving_tractogram = moving_tractogram.streamlines
-	static_tractogram = nib.streamlines.load(static_tractogram)
-	static_tractogram = static_tractogram.streamlines     
+	aff_dir = '/N/dc2/projects/lifebid/giulia/data/HCP3-IU-Giulia/derivatives/slr_transformations'
+	affine_path = '%s/affine_m%s_s%s.npy' %(aff_dir, exID, subjID)
+	affine_fname = './affine_m%s_s%s.npy' %(exID, subjID)
 
-	print("Set parameters as in Garyfallidis et al. 2015.") 
-	threshold_length = 40.0 # 50mm / 1.25
-	qb_threshold = 16.0  # 20mm / 1.25 
-	nb_res_points = 20
+	if isfile(affine_path):
+		print("Affine already computed. Retrieving past results.")
+		copyfile(affine_path, affine_fname)
 
-	print("Performing QuickBundles of static tractogram and resampling...")
-	st = np.array([s for s in static_tractogram if len(s) > threshold_length], dtype=np.object)
-	qb = QuickBundles(threshold=qb_threshold)
-	st_clusters = [cluster.centroid for cluster in qb.cluster(st)]
-	st_clusters = set_number_of_points(st_clusters, nb_res_points)
+	else:
+		print("Loading tractograms...")
+		moving_tractogram = nib.streamlines.load(moving_tractogram)
+		moving_tractogram = moving_tractogram.streamlines
+		static_tractogram = nib.streamlines.load(static_tractogram)
+		static_tractogram = static_tractogram.streamlines     
 
-	print("Performing QuickBundles of moving tractogram and resampling...")
-	mt = np.array([s for s in moving_tractogram if len(s) > threshold_length], dtype=np.object)
-	qb = QuickBundles(threshold=qb_threshold)
-	mt_clusters = [cluster.centroid for cluster in qb.cluster(mt)]
-	mt_clusters = set_number_of_points(mt_clusters, nb_res_points)
+		print("Set parameters as in Garyfallidis et al. 2015.") 
+		threshold_length = 40.0 # 50mm / 1.25
+		qb_threshold = 16.0  # 20mm / 1.25 
+		nb_res_points = 20
 
-	print("Performing Linear Registration...")
-	srr = StreamlineLinearRegistration()
-	srm = srr.optimize(static=st_clusters, moving=mt_clusters)
+		print("Performing QuickBundles of static tractogram and resampling...")
+		st = np.array([s for s in static_tractogram if len(s) > threshold_length], dtype=np.object)
+		qb = QuickBundles(threshold=qb_threshold)
+		st_clusters = [cluster.centroid for cluster in qb.cluster(st)]
+		st_clusters = set_number_of_points(st_clusters, nb_res_points)
 
-	print("Affine transformation matrix with Streamline Linear Registration:")
-	affine = srm.matrix
-	print('%s' %affine)
+		print("Performing QuickBundles of moving tractogram and resampling...")
+		mt = np.array([s for s in moving_tractogram if len(s) > threshold_length], dtype=np.object)
+		qb = QuickBundles(threshold=qb_threshold)
+		mt_clusters = [cluster.centroid for cluster in qb.cluster(mt)]
+		mt_clusters = set_number_of_points(mt_clusters, nb_res_points)
 
-	np.save('affine_m%s_s%s.npy' %(exID, subjID), affine)
-	print("Affine for example %s and target %s saved." %(exID, subjID))
+		print("Performing Linear Registration...")
+		srr = StreamlineLinearRegistration()
+		srm = srr.optimize(static=st_clusters, moving=mt_clusters)
+
+		print("Affine transformation matrix with Streamline Linear Registration:")
+		affine = srm.matrix
+		print('%s' %affine)
+
+		np.save('affine_m%s_s%s.npy' %(exID, subjID), affine)
+		print("Affine for example %s and target %s saved." %(exID, subjID))
 
 
 if __name__ == '__main__':
