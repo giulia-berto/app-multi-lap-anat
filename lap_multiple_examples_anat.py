@@ -48,16 +48,6 @@ def lap_multiple_examples(moving_tractograms_dir, static_tractogram, ex_dir, lD,
 	nt = len(moving_tractograms)
 	ne = len(examples)
 
-	#moving_tractograms = os.listdir(moving_tractograms_dir)
-	#moving_tractograms.sort()
-	#nt = len(moving_tractograms)
-	#moving_tractograms = ['%s/' %moving_tractograms_dir + moving_tractograms[i] for i in range(nt)]
-
-	#examples = os.listdir(ex_dir)
-	#examples.sort()
-	#ne = len(examples)
-	#examples = ['%s/' %ex_dir + examples[i] for i in range(ne)]
-
 	if nt != ne:
 		print("Error: number of moving tractograms differs from number of example bundles.")
 		sys.exit()
@@ -74,17 +64,15 @@ def lap_multiple_examples(moving_tractograms_dir, static_tractogram, ex_dir, lD,
 		min_cost_values = np.hstack(result_lap[:,0,1])
 		example_bundle_len_med = np.median(np.hstack(result_lap[:,0,2]))
 
-		#result_lap = np.array(Parallel(n_jobs=-1)(delayed(lap_single_example)(moving_tractograms[i], static_tractogram, examples[i], lD, lE, lR) for i in range(nt)))
-
-		#estimated_bundle_idx = np.hstack(result_lap[:,0]) 
-		#min_cost_values = np.hstack(result_lap[:,1])
-		#example_bundle_len_med = np.median(np.hstack(result_lap[:,2]))
-
 		print("Ranking the estimated streamlines...")
 		estimated_bundle_idx_ranked = ranking_schema(estimated_bundle_idx, min_cost_values)
+		np.save('candidate_bundle_idx_ranked_lap.npy', estimated_bundle_idx_ranked)
+		np.save('candidate_bundle_idx_lap.npy', estimated_bundle_idx)
+		np.save('min_cost_values_lap.npy', min_cost_values)
 
 		print("Extracting the estimated bundle...")
 		estimated_bundle_idx_ranked_med = estimated_bundle_idx_ranked[0:int(example_bundle_len_med)]
+		np.save('estimated_bundle_idx_lap.npy', estimated_bundle_idx_ranked_med)
 
 		with open('config.json') as f:
             		data = json.load(f)
@@ -118,6 +106,6 @@ if __name__ == '__main__':
 
 	t0=time.time()
 	result_lap = lap_multiple_examples(args.moving_dir, args.static, args.ex_dir, args.lD, args.lE, args.lR, args.out)
-	print("Time for computing multiple-lap = %s seconds" %(time.time()-t0))
+	print("Time for computing multiple-lap-anat = %i minutes" %((time.time()-t0)/60))
 
 	sys.exit()    

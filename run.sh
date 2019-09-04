@@ -7,6 +7,7 @@ t1_static=`jq -r '.t1_static' config.json`
 segmentations=`jq -r '.segmentations' config.json`
 movings=`jq -r '.tractograms_moving' config.json`
 t1s=`jq -r '.t1s_moving' config.json`
+slr=`jq -r '.slr' config.json`
 lambdaD=`jq -r '.lambdaD' config.json`
 lambdaE=`jq -r '.lambdaE' config.json`
 lambdaR=`jq -r '.lambdaR' config.json`
@@ -73,6 +74,14 @@ if [[ $static == *.tck ]];then
 		python tck2trk.py $t1_moving ${id_mov}_tractogram_moving.tck -f;
 		cp ${id_mov}_tractogram_moving.trk tractograms_directory/$id_mov'_track.trk';
 	done
+else
+	echo "Tractogram already in .trk format"
+	cp $static $subjID'_track.trk';
+	for i in `seq 1 $num_ex`; 
+	do 
+		id_mov=$(jq -r "._inputs[1+$i+$num_ex].meta.subject" config.json | tr -d "_")
+		cp ${arr_mov[i]//[,\"]} tractograms_directory/$id_mov'_track.trk';
+	done
 fi
 
 if [ -z "$(ls -A -- "tractograms_directory")" ]; then    
@@ -82,36 +91,55 @@ else
 	echo "tractograms_directory created."; 
 fi
 
-echo "SLR registration"
-for i in `seq 1 $num_ex`; 
-do
-	id_mov=$(jq -r "._inputs[1+$i+$num_ex].meta.subject" config.json | tr -d "_")
-	tractogram_moving=tractograms_directory/$id_mov'_track.trk'
-	python tractograms_slr.py -moving $tractogram_moving -static $subjID'_track.trk'
-done
+if [[ $slr == True ]];then
+	echo "SLR registration"
+	for i in `seq 1 $num_ex`; 
+	do
+		id_mov=$(jq -r "._inputs[1+$i+$num_ex].meta.subject" config.json | tr -d "_")
+		tractogram_moving=tractograms_directory/$id_mov'_track.trk'
+		python tractograms_slr.py -moving $tractogram_moving -static $subjID'_track.trk'
+	done
+else
+	echo "Assuming subjects already co-registered in the same space."
+fi
 
-echo "AFQ conversion to trk"
-for i in `seq 1 $num_ex`; 
-do
-	t1_moving=${arr_t1s[i]//[,\"]}
-	id_mov=$(jq -r "._inputs[1+$i+$num_ex].meta.subject" config.json | tr -d "_")		
-	matlab -nosplash -nodisplay -r "afqConverterMulti(${arr_seg[i]//,}, ${arr_t1s[i]//,})";
-	while read tract_name; do
-		echo "Tract name: $tract_name";
-		if [ ! -d "examples_directory_$tract_name" ]; then
-  			mkdir examples_directory_$tract_name;
-		fi
-		mv $tract_name'_tract.trk' examples_directory_$tract_name/$id_mov'_'$tract_name'_tract.trk';
+echo "Create examples directory"
+if [[ ${arr_seg[1]//[,\"]} == *.trk ]];then
+	echo "Tracts already in .trk format"
+	tract_name=$(jq -r "._inputs[2].tags[0]" config.json | tr -d "_")
+	echo $tract_name > tract_name_list.txt
+	mkdir examples_directory_$tract_name;
+	for i in `seq 1 $num_ex`; 
+	do
+		id_mov=$(jq -r "._inputs[1+$i+$num_ex].meta.subject" config.json | tr -d "_")
+		cp ${arr_seg[i]//[,\"]} examples_directory_$tract_name/$id_mov'_'$tract_name'_tract.trk';
+	done
+else
+	echo "Tracts conversion to trk"
+	for i in `seq 1 $num_ex`; 
+	do
+		t1_moving=${arr_t1s[i]//[,\"]}
+		id_mov=$(jq -r "._inputs[1+$i+$num_ex].meta.subject" config.json | tr -d "_")
+		tractogram_moving=tractograms_directory/$id_mov'_track.trk'		
+		seg_file=${arr_seg[i]//[,\"]}
+		rm -f tract_name_list.txt;
+		python wmc2trk.py -tractogram $tractogram_moving -classification $seg_file
+		while read tract_name; do
+			echo "Tract name: $tract_name";
+			if [ ! -d "examples_directory_$tract_name" ]; then
+  				mkdir examples_directory_$tract_name;
+			fi
+			mv $tract_name'_tract.trk' examples_directory_$tract_name/$id_mov'_'$tract_name'_tract.trk';
 
-		if [ -z "$(ls -A -- "examples_directory_$tract_name")" ]; then    
-			echo "examples_directory is empty."; 
-			exit 1;
-		else    
-			echo "examples_directory created."; 
-		fi	
-	done < tract_name_list.txt
-
-done
+			if [ -z "$(ls -A -- "examples_directory_$tract_name")" ]; then    
+				echo "examples_directory is empty."; 
+				exit 1;
+			else    
+				echo "examples_directory created."; 
+			fi	
+		done < tract_name_list.txt
+	done
+fi
 
 wmc_tag=`jq -r '._inputs[2].datatype_tags[0]' config.json` 
 if [ $wmc_tag == 'afq' ]; then
@@ -135,6 +163,7 @@ while read tract_name; do
 	base_name=$tract_name'_tract'
 	output_filename=tracts_tck/${subjID}_${base_name}_${run}.tck
 	python lap_multiple_examples_anat.py -moving_dir tractograms_directory -static $subjID'_track.trk' -ex_dir examples_directory_$tract_name -lD $lD -lE $lE -lR $lR -out $output_filename;
+	mv estimated_bundle_idx_lap.npy estimated_bundle_idx_lap_${tract_name}.npy
 
 done < tract_name_list.txt
 
@@ -145,25 +174,20 @@ else
 	echo "multi-LAPanat done."
 fi
 
-echo "Build partial tractogram"
-output_filename=${subjID}'_var-partial_tract_'${run}'.tck';
-python build_partial_tractogram.py -tracts_tck_dir 'tracts_tck' -out ${output_filename};
-if [ -f ${output_filename} ]; then 
-    echo "Partial tractogram built."
-else 
-	echo "Partial tractogram missing."
-	exit 1
-fi
-
-echo "Build a wmc structure"
-stat_sub=\'$subjID\'
-tag=\'$run\'
-matlab -nosplash -nodisplay -r "build_wmc_structure($stat_sub, $tag)";
-if [ -f 'output.mat' ]; then 
+echo "Building the wmc structure"
+python build_wmc.py -tractogram $static
+if [ -f 'classification.mat' ]; then 
     echo "WMC structure created."
 else 
 	echo "WMC structure missing."
 	exit 1
 fi
 
-echo "Complete"
+if [[ ${arr_seg[1]//[,\"]} == *.trk ]];then
+	echo "Saving the tract also in .trk format"
+	est_tck=$(ls tracts_tck)
+	echo "${est_tck}"
+	python tck2trk.py $t1_static tracts_tck/${est_tck}
+	mv tracts_tck/*.trk track.trk
+fi
+
