@@ -65,6 +65,6 @@ Branch 2.0: \
 This branch implements the same functionalities of the branch 1.1 but with the following changes: 
 - uses the new wmc input 
 - SLR registration is optional
-- can run multiple bundles at the same time \
+- can run multiple bundles at the same time 
 
 You may provide as examples AFQ segmentations obtained by the app https://doi.org/10.25663/brainlife.app.207 or WMA segmentations obtained by the app https://doi.org/10.25663/brainlife.app.188.
