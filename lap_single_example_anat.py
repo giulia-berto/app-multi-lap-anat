@@ -43,15 +43,10 @@ def compute_lap_matrices(superset_idx, source_tract, tractogram, roi1, roi2, sub
 	distance = bundles_distances_mam
 	tractogram = np.array(tractogram, dtype=np.object)
 	
-	if isfile('distance_matrix_m%s_s%s.npy' %(exID, subjID)):
-		print("Retrieving distance matrix for example %s and target %s." %(exID, subjID))
-		distance_matrix = np.load('distance_matrix_m%s_s%s.npy' %(exID, subjID))
-	else:
-		print("Computing the distance matrix (%s x %s) for RLAP with %s... " % (len(source_tract), len(superset_idx), distance))
-		t0=time.time()
-		distance_matrix = dissimilarity(source_tract, tractogram[superset_idx], distance)
-		np.save('distance_matrix_m%s_s%s.npy' %(exID, subjID), distance_matrix)
-		print("Time for computing the distance matrix = %s seconds" %(time.time()-t0))
+	print("Computing the distance matrix (%s x %s) for RLAP with %s... " % (len(source_tract), len(superset_idx), distance))
+	t0=time.time()
+	distance_matrix = dissimilarity(source_tract, tractogram[superset_idx], distance)
+	print("Time for computing the distance matrix = %s seconds" %(time.time()-t0))
 	
 	print("Computing the endpoint matrix (%s x %s) for RLAP... " % (len(source_tract), len(superset_idx)))
 	t1=time.time()
