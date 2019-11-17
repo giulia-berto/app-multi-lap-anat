@@ -101,7 +101,7 @@ def lap_single_example(moving_tractogram, static_tractogram, example, lD, lE, lR
 	    step_size = data["step_size"]
 	    slr = data["slr"]
 	    #tag = data["_inputs"][2]["datatype_tags"][0].encode("utf-8")
-	    tractID = eval(data['tractID_list'].encode("utf-8"))[0]
+	    tractID = eval(data['tractID_list'].encode("utf-8")) #works only with one element
 	distance_func = bundles_distances_mam
 
 	subjID = ntpath.basename(static_tractogram)[0:6]
