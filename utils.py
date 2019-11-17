@@ -16,7 +16,7 @@ def resample_tractogram(tractogram, step_size):
     lengths=list(length(tractogram))
     tractogram_res = []
     for i, f in enumerate(tractogram):
-	nb_res_points = np.int(np.floor(lengths[i]/step_size))
+	nb_res_points = np.int(np.ceil(lengths[i]/step_size))
 	tmp = set_number_of_points(f, nb_res_points)
 	tractogram_res.append(tmp)
     tractogram_res = nib.streamlines.array_sequence.ArraySequence(tractogram_res)
