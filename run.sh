@@ -146,16 +146,11 @@ tractID_list=`jq -r '.tractID_list' config.json`
 arr=()
 arr+=(${tractID_list})
 tractID=${arr[0]//[,\"]}
-if [[ $tractID < 30 ]]; then
-	wmc_tag='afq'
-else 
-	wmc_tag='wmaSeg'
-fi
 
-if [ $wmc_tag == 'afq' ]; then
+if [[ $tractID < 30 ]]; then #afq
 	echo "Coregistering ROIs on the target subject space"
 	./mni_roi_registration.sh ${subjID} ${t1_static} AFQ
-elif [ $wmc_tag == 'wmaSeg' ]; then
+else #wmaSeg
 	echo "Extracting endROIs of the minor tracts"
 	mkdir aligned_ROIs;
 	fsDir=`jq -r '.fsDir' config.json`
