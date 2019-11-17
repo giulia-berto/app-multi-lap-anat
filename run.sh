@@ -141,7 +141,17 @@ else
 	done
 fi
 
-wmc_tag=`jq -r '._inputs[2].datatype_tags[0]' config.json` 
+#wmc_tag=`jq -r '._inputs[2].datatype_tags[0]' config.json` 
+tractID_list=`jq -r '.tractID_list' config.json`
+arr=()
+arr+=(${tractID_list})
+tractID=${arr[0]//[,\"]}
+if [[ $tractID < 30 ]]; then
+	wmc_tag='afq'
+else 
+	wmc_tag='wmaSeg'
+fi
+
 if [ $wmc_tag == 'afq' ]; then
 	echo "Coregistering ROIs on the target subject space"
 	./mni_roi_registration.sh ${subjID} ${t1_static} AFQ
