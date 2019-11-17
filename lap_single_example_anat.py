@@ -144,6 +144,10 @@ def lap_single_example(moving_tractogram, static_tractogram, example, lD, lE, lR
 	print("Loading the two-waypoint ROIs of the target...")
 	table_filename = 'ROIs_labels_dictionary.pickle'
 	table = pickle.load(open(table_filename))
+	if tract_name == 'ioff.left':
+		tract_name = 'Left_IFOF'
+	elif tract_name == 'ioff.right':
+		tract_name = 'Right_IFOF'
 	roi1_lab = table[tract_name].items()[0][1]
 	roi2_lab = table[tract_name].items()[1][1]
 	#if tag == 'afq':
