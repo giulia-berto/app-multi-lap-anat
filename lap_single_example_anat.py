@@ -100,7 +100,8 @@ def lap_single_example(moving_tractogram, static_tractogram, example, lD, lE, lR
 	    k = data["k"]
 	    step_size = data["step_size"]
 	    slr = data["slr"]
-	    tag = data["_inputs"][2]["datatype_tags"][0].encode("utf-8")
+	    #tag = data["_inputs"][2]["datatype_tags"][0].encode("utf-8")
+	    tractID = eval(data['tractID_list'].encode("utf-8"))[0]
 	distance_func = bundles_distances_mam
 
 	subjID = ntpath.basename(static_tractogram)[0:6]
@@ -145,10 +146,12 @@ def lap_single_example(moving_tractogram, static_tractogram, example, lD, lE, lR
 	table = pickle.load(open(table_filename))
 	roi1_lab = table[tract_name].items()[0][1]
 	roi2_lab = table[tract_name].items()[1][1]
-	if tag == 'afq':
+	#if tag == 'afq':
+	if tractID < 30:
 		roi1_filename = 'aligned_ROIs/sub-%s_var-AFQ_lab-%s_roi.nii.gz' %(subjID, roi1_lab)
 		roi2_filename = 'aligned_ROIs/sub-%s_var-AFQ_lab-%s_roi.nii.gz' %(subjID, roi2_lab)
-	elif tag == 'wmaSeg':
+	#elif tag == 'wmaSeg':
+	else:
 		roi1_filename = 'aligned_ROIs/%s.nii.gz' %roi1_lab
 		roi2_filename = 'aligned_ROIs/%s.nii.gz' %roi2_lab
 	roi1 = nib.load(roi1_filename)
