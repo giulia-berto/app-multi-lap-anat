@@ -16,18 +16,12 @@ unset PYTHONPATH
 export PATH=/N/u/gberto/Karst/miniconda2/bin:$PATH 
 
 #execute app
-#./run.sh
+./run.sh
 
-#ret=$?
-#if [ ! $ret -eq 0 ]; then
-#	exit $ret
-#fi
-t1_static=`jq -r '.t1_static' config.json`
-est_tck=$(ls tracts_tck)
-echo "${est_tck}"
-python tck2trk.py $t1_static tracts_tck/${est_tck}
-mv tracts_tck/*.trk track.trk
-
+ret=$?
+if [ ! $ret -eq 0 ]; then
+	exit $ret
+fi
 
 #removing files
 rm *.tck -f
