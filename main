@@ -24,7 +24,6 @@ if [ ! $ret -eq 0 ]; then
 fi
 
 #removing files
-rm *.trk -f
 rm *.tck -f
 rm *.nii.gz -f
 rm -r tractograms_directory -f
