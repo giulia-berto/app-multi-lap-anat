@@ -91,7 +91,7 @@ else
 	echo "tractograms_directory created."; 
 fi
 
-if [[ $slr == True ]];then
+if [[ $slr == true ]];then
 	echo "SLR registration"
 	for i in `seq 1 $num_ex`; 
 	do
