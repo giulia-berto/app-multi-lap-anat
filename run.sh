@@ -60,7 +60,7 @@ else
 fi
 
 echo "Tractogram conversion to trk"
-mkdir tractograms_directory;
+mkdir -p tractograms_directory;
 if [[ $static == *.tck ]];then
 	echo "Input in tck format. Convert it to trk."
 	cp $static ./tractogram_static.tck;
@@ -97,7 +97,7 @@ if [[ $slr == true ]];then
 	do
 		id_mov=$(jq -r "._inputs[1+$i+$num_ex].meta.subject" config.json | tr -d "_")
 		tractogram_moving=tractograms_directory/$id_mov'_track.trk'
-		python tractograms_slr.py -moving $tractogram_moving -static $subjID'_track.trk'
+		python tractograms_slr.py -moving $tractogram_moving -movID $id_mov -static $subjID'_track.trk' -statID $subjID
 	done
 else
 	echo "Assuming subjects already co-registered in the same space."
@@ -108,7 +108,7 @@ if [[ ${arr_seg[1]//[,\"]} == *.trk ]];then
 	echo "Tracts already in .trk format"
 	tract_name=$(jq -r "._inputs[2].tags[0]" config.json | tr -d "_")
 	echo $tract_name > tract_name_list.txt
-	mkdir examples_directory_$tract_name;
+	mkdir -p examples_directory_$tract_name;
 	for i in `seq 1 $num_ex`; 
 	do
 		id_mov=$(jq -r "._inputs[1+$i+$num_ex].meta.subject" config.json | tr -d "_")
@@ -160,7 +160,7 @@ else #wmaSeg
 fi
 
 echo "Running anatomically-informed multi-LAP"
-mkdir tracts_tck;
+mkdir -p tracts_tck;
 run=multi-LAPanat	
 
 while read tract_name; do
@@ -187,6 +187,10 @@ else
 	echo "WMC structure missing."
 	exit 1
 fi
+
+mkdir -p output_wmc
+mv tracts output_wmc
+cp classification.mat output_wmc
 
 if [[ ${arr_seg[1]//[,\"]} == *.trk ]];then
 	echo "Saving the tract also in .trk format"

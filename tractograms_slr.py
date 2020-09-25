@@ -12,25 +12,18 @@ import nibabel as nib
 import numpy as np
 import ntpath
 from os.path import isfile
-from shutil import copyfile
 from nibabel.streamlines import load
 from dipy.segment.clustering import QuickBundles
 from dipy.align.streamlinear import StreamlineLinearRegistration
 from dipy.tracking.streamline import set_number_of_points
 
 
-def tractograms_slr(moving_tractogram, static_tractogram):
+def tractograms_slr(moving_tractogram, exID, static_tractogram, subjID):
 
-	subjID = ntpath.basename(static_tractogram)[0:6]
-	exID = ntpath.basename(moving_tractogram)[0:6]
-
-	aff_dir = '/N/dc2/projects/lifebid/giulia/data/HCP3-IU-Giulia/derivatives/slr_transformations'
-	affine_path = '%s/affine_m%s_s%s.npy' %(aff_dir, exID, subjID)
-	affine_fname = './affine_m%s_s%s.npy' %(exID, subjID)
+	affine_path = './affine_m%s_s%s.npy' %(exID, subjID)
 
 	if isfile(affine_path):
 		print("Affine already computed. Retrieving past results.")
-		copyfile(affine_path, affine_fname)
 
 	else:
 		print("Loading tractograms...")
@@ -73,10 +66,14 @@ if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-moving', nargs='?', const=1, default='',
 	                    help='The moving tractogram filename')
+	parser.add_argument('-movID', nargs='?', const=1, default='',
+	                    help='The moving subject ID')
 	parser.add_argument('-static', nargs='?',  const=1, default='',
-	                    help='The static tractogram filename')                 
+	                    help='The static tractogram filename')  
+	parser.add_argument('-statID', nargs='?',  const=1, default='',
+	                    help='The static subject ID')                 
 	args = parser.parse_args()
 
-	tractograms_slr(args.moving, args.static)	
+	tractograms_slr(args.moving, args.movID, args.static, args.statID)	
 	                            
 	sys.exit()    
