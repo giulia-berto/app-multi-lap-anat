@@ -152,7 +152,7 @@ if [[ $tractID < 30 ]]; then #afq
 	./mni_roi_registration.sh ${subjID} ${t1_static} AFQ
 else #wmaSeg
 	echo "Extracting endROIs of the minor tracts"
-	mkdir aligned_ROIs;
+	mkdir -p aligned_ROIs;
 	fsDir=`jq -r '.fsDir' config.json`
 	python extract_endrois_minor.py -region 'parietal' -fsDir ${fsDir} -t1 ${t1_static} -out_dir aligned_ROIs
 	python extract_endrois_minor.py -region 'temporal' -fsDir ${fsDir} -t1 ${t1_static} -out_dir aligned_ROIs
