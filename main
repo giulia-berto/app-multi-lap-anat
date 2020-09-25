@@ -5,9 +5,18 @@
 set -e
 set -x
 
+export FREESURFER_LICENSE="hayashis@iu.edu 29511 *CPmh9xvKQKHE FSg0ijTusqaQc"
+echo $FREESURFER_LICENSE > license.txt
+
+#convert some files
+fsDir=$(jq -r .fsDir config.json)
+if [ $fsDir != "null" ];then
+    singularity exec -e -B `pwd`/license.txt:/usr/local/freesurfer/license.txt docker://brainlife/connectome_workbench:1.4.2b ./convert_files.sh
+fi
+
 #execute app
 #./run.sh
-SINGULARITYENV_PYTHONNOUSERSITE=true singularity exec -e docker://giuliaberto/classifyber:1.2 ./run.sh
+SINGULARITYENV_PYTHONNOUSERSITE=true singularity exec -e docker://brainlife/dipy:0.16.0 ./run.sh
 
 ret=$?
 if [ ! $ret -eq 0 ]; then
