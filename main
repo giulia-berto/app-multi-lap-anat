@@ -7,7 +7,7 @@ set -x
 
 #execute app
 #./run.sh
-SINGULARITYENV_PYTHONNOUSERSITE=true singularity exec -e docker://brainlife/dipy:0.16.0 ./run.sh
+SINGULARITYENV_PYTHONNOUSERSITE=true singularity exec -e docker://giuliaberto/classifyber:1.2 ./run.sh
 
 ret=$?
 if [ ! $ret -eq 0 ]; then
