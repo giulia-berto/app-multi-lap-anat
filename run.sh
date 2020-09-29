@@ -180,6 +180,7 @@ else
 fi
 
 echo "Building the wmc structure"
+mkdir -p tracts
 python build_wmc.py -tractogram $static
 if [ -f 'classification.mat' ]; then 
     echo "WMC structure created."
