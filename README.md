@@ -1,22 +1,29 @@
 [![Run on Brainlife.io](https://img.shields.io/badge/Brainlife-bl.app.122-blue.svg)](https://doi.org/10.25663/brainlife.app.122)
 
-### app-multi-lap-anat
+# app-multi-lap-anat
 This app segments white matter bundles by solving Anatomically-Informed multiple Linear Assignment Problems (multi-LAP-anat). The method is a supervised example-based segmentation method, and thus requires multiple bundles as examples to learn from. The segmentation is performed by means of fiber correspondence across subjects by considering both the shape of the fibers and their relative anatomical position.
 
 ![](app-lap-anat-avatar.png)
 
 ### Authors
 - Giulia Bertò (gberto@fbk.eu)
+
+### Contributors
 - Emanuele Olivetti (olivetti@fbk.eu)
 - Paolo Avesani (avesani@fbk.eu)
 
-### Funding 
+### Funding Acknowledgement
+We kindly ask that you acknowledge the funding below in your publications and code reusing this code. \
 [![NSF-BCS-1734853](https://img.shields.io/badge/NSF_BCS-1734853-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1734853)
 [![NSF-BCS-1636893](https://img.shields.io/badge/NSF_BCS-1636893-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1636893)
+[![NSF-AOC-1916518](https://img.shields.io/badge/NSF_AOC-1916518-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1916518)
 
+### Citation
+We kindly ask that you cite the following article when publishing papers and code using this code: \
+["Anatomically-Informed Multiple Linear Assignment Problems for White Matter Bundle Segmentation."](https://doi.org/10.1109/ISBI.2019.8759174), Bertò, G., Avesani, P., Pestilli, F., Bullock, D., Caron, B. and Olivetti, E., 2019, April. Anatomically-Informed Multiple Linear Assignment Problems for White Matter Bundle Segmentation. In 2019 IEEE 16th International Symposium on Biomedical Imaging (ISBI 2019) (pp. 135-138). IEEE.
 
 ### Running the app
-On [BrainLife.io](http://brainlife.io/) \
+### On [Brainlife.io](http://brainlife.io/) 
 You can submit this App online at https://doi.org/10.25663/brainlife.app.122 via the “Execute” tab.
 
 Inputs: \
@@ -25,7 +32,7 @@ To perform the bundle segmentation, you need two key elements: (i) the tractogra
 Output: \
 You will get the wmc segmentation of the (single) bundle of interest in the target subject.
 
-Branch 1.0: \
+#### Branch 1.0:
 The wmc segmentation files you have to provide as examples should be obtained using the AFQ algorithm (https://doi.org/10.25663/bl.app.13). \
 You can choose the bundle to be segmented (one at the time) by providing the id related to the AFQ segmentation as follows: \
 1 - Left Thalamic Radiation \
@@ -49,7 +56,7 @@ You can choose the bundle to be segmented (one at the time) by providing the id 
 19 - Left Arcuate \
 20 - Right Arcuate 
 
-Branch 1.1: \
+#### Branch 1.1:
 In addition to use as examples AFQ wmc segmentations, you may also provide as examples the wmc segmentation obtained using the WMA algorithm (https://doi.org/10.25663/bl.app.41). In this case you have also to provide the freesufer parcellation file, which can be obtained by running the app https://doi.org/10.25663/bl.app.0. \
 You can choose the bundle to be segmented (one at the time) by providing the id related to the WMA segmentation as follows: \
 38 - Left pArc \
@@ -61,7 +68,7 @@ You can choose the bundle to be segmented (one at the time) by providing the id 
 44 - Left MdLF-Ang \
 45 - Right MdLF-Ang 
 
-Branch 2.0: \
+#### Branch 2.0:
 This branch implements the same functionalities of the branch 1.1 but with the following changes: 
 - uses the new wmc input 
 - SLR registration is optional
@@ -69,3 +76,38 @@ This branch implements the same functionalities of the branch 1.1 but with the f
 
 You may provide as examples AFQ segmentations obtained by the app https://doi.org/10.25663/brainlife.app.207 or WMA segmentations obtained by the app https://doi.org/10.25663/brainlife.app.188.
 
+### Running locally
+1. git clone this repo.
+2. Inside the cloned directory, create `config.json` with something like the following content with paths to your input files:
+```
+{
+    "tractogram_static": "./track.tck",
+    "t1_static": "./t1.nii.gz",
+    "segmentations": [
+        "./sub-1/classification.mat",           
+        "./sub-2/classification.mat"
+    ],
+    "tracts": [
+        "./sub-1/tracts",
+        "./sub-2/tracts"
+    ],
+    "tractograms_moving": [
+        "./sub-1/track.tck",
+        "./sub-2/track.tck"
+    ],
+    "t1s_moving": [
+        "./sub-1/t1.nii.gz",
+        "./sub-2/t1.nii.gz"
+    ],
+    "tractID_list": "11, 12, 19, 20"
+}
+```
+3. Launch the App by executing `main`.
+```
+./main
+```
+
+#### Dependencies
+This App only requires [singularity](https://sylabs.io/singularity/) to run.
+
+#### MIT Copyright (c) 2020 Bruno Kessler Foundation (FBK)
