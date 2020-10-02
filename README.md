@@ -1,4 +1,4 @@
-[![Run on Brainlife.io](https://img.shields.io/badge/Brainlife-bl.app.207-blue.svg)](https://doi.org/10.25663/brainlife.app.207)
+[![Run on Brainlife.io](https://img.shields.io/badge/Brainlife-bl.app.227-blue.svg)](https://doi.org/10.25663/brainlife.app.227)
 
 # app-multi-lap-anat
 This app segments white matter bundles by solving Anatomically-Informed multiple Linear Assignment Problems (multi-LAP-anat). The method is a supervised example-based segmentation method, and thus requires multiple bundles as examples to learn from. The segmentation is performed by means of fiber correspondence across subjects by considering both the shape of the fibers and their relative anatomical position.
@@ -24,7 +24,7 @@ We kindly ask that you cite the following article when publishing papers and cod
 
 ### Running the app
 ### On [Brainlife.io](http://brainlife.io/) 
-You can submit this App online at https://doi.org/10.25663/brainlife.app.207 via the “Execute” tab.
+You can submit this App online at https://doi.org/10.25663/brainlife.app.227 via the “Execute” tab.
 
 Inputs: \
 To perform the bundle segmentation, you need two key elements: (i) the tractogram of the (target) subject you want to extract the bundle from and (ii) the wmc segmentations of multiple (example) subjects you want to learn from. Moreover, you have to provide the anatomical T1s and the tractograms of the (example) subjects (which are used to apply an initial Streamline Linear Registration (SLR) between tractograms).  
