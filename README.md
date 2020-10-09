@@ -112,4 +112,4 @@ You may provide as examples AFQ segmentations obtained by the app https://doi.or
 #### Dependencies
 This App only requires [singularity](https://sylabs.io/singularity/) to run.
 
-#### MIT Copyright (c) 2020 Bruno Kessler Foundation (FBK)
+#### MIT Copyright (c) 2019 Bruno Kessler Foundation (FBK)
