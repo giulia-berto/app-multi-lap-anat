@@ -22,7 +22,6 @@ brainlife.io is publicly funded and for the sustainability of the project it is 
 [![NSF-IIS-1912270](https://img.shields.io/badge/NSF_IIS-1912270-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1912270)
 [![NIH-NIBIB-R01EB029272](https://img.shields.io/badge/NIH_NIBIB-R01EB029272-green.svg)](https://grantome.com/grant/NIH/R01-EB029272-01)
 
-
 ### Citation
 We kindly ask that you cite the following article when publishing papers and code using this code: 
 1. ["Anatomically-Informed Multiple Linear Assignment Problems for White Matter Bundle Segmentation."](https://doi.org/10.1109/ISBI.2019.8759174), Bertò, G., Avesani, P., Pestilli, F., Bullock, D., Caron, B. and Olivetti, E., 2019, April. Anatomically-Informed Multiple Linear Assignment Problems for White Matter Bundle Segmentation. In 2019 IEEE 16th International Symposium on Biomedical Imaging (ISBI 2019) (pp. 135-138). IEEE.
@@ -30,7 +29,7 @@ We kindly ask that you cite the following article when publishing papers and cod
 
 ### Running the app
 ### On [Brainlife.io](http://brainlife.io/) 
-You can submit this App online at https://doi.org/10.25663/brainlife.app.122 via the “Execute” tab. WARNING: this App has been deprecated by the following App: https://doi.org/10.25663/brainlife.app.227
+You can submit this App online at https://doi.org/10.25663/brainlife.app.122 via the “Execute” tab. WARNING: this App has been deprecated by the following App: https://doi.org/10.25663/brainlife.app.227.
 
 Inputs: \
 To perform the bundle segmentation, you need two key elements: (i) the tractogram of the (target) subject you want to extract the bundle from and (ii) the wmc segmentations of multiple (example) subjects you want to learn from. Moreover, you have to provide the anatomical T1s and the tractograms of the (example) subjects (which are used to apply an initial Streamline Linear Registration (SLR) between tractograms).  
@@ -97,7 +96,7 @@ You can choose the bundle to be segmented (one at the time) by providing the id 
         "./sub-1/t1.nii.gz",
         "./sub-2/t1.nii.gz"
     ],
-    "tractID_list": "11, 12, 19, 20"
+    "tract1": "11"
 }
 ```
 3. Launch the App by executing `main`.
