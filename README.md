@@ -2,6 +2,61 @@
 [![Run on Brainlife.io](https://img.shields.io/badge/Brainlife-bl.app.227-blue.svg)](https://doi.org/10.25663/brainlife.app.227)
 
 # app-multi-lap-anat
+
+<!-- brainlife-app:begin (generated from the App manifest; edit the manifest, not this block) -->
+
+> **Segments white matter bundles in a target tractogram by anatomically-informed multiple Linear Assignment Problems (multi-LAP-anat), learning from WMC segmentations of example subjects, and outputs a WMC.**
+
+Supervised example-based bundle segmentation: example bundles from several subjects (AFQ or WMA WMC segmentations with their tractograms and T1s) are optionally aligned to the target with streamline linear registration (SLR), and for each requested bundle the target streamlines are selected by solving linear assignment problems that combine streamline distance, endpoint distance and ROI terms. Use it to transfer bundle definitions from example subjects to a new subject. Several bundles can be segmented in one run; WMA minor tracts (IDs 38-45) need the target FreeSurfer input. All example inputs must be given in the same subject order.
+
+| | |
+|---|---|
+| 📥 **Inputs** | `neuro/track/tck` ×2 · `neuro/anat/t1w` ×2 · `neuro/wmc` · `neuro/freesurfer` (optional) |
+| 📤 **Outputs** | `neuro/wmc` |
+| 🐳 **Container** | `brainlife/connectome_workbench:1.4.2b` |
+| ⚙️ **Resources** | 16 CPUs · 31 GB memory · 12 h walltime |
+| 🔑 **Requires** | `FREESURFER_LICENSE` |
+| 🔗 **Run it** | [doi.org/10.25663/brainlife.app.227](https://doi.org/10.25663/brainlife.app.227) |
+
+#### 📥 Inputs
+
+| Input | Datatype | Required | Description |
+|---|---|---|---|
+| `0` | `neuro/track/tck` | yes | Tractogram of static (target) subject. Same subject as the static T1. |
+| `1` | `neuro/anat/t1w` (acpc_aligned) | yes | T1 of static (target) subject |
+| `2` | `neuro/wmc` | yes | Segmentations of moving (examples) subjects (they should be extracted from the tractogram provided). One per example subject, in the same order as the moving tractograms and T1s. |
+| `3` | `neuro/track/tck` | yes | Tractograms of moving (example) subjects |
+| `4` | `neuro/anat/t1w` (acpc_aligned) | yes | Ts1 of moving (example) subjects |
+| `5` | `neuro/freesurfer` | no | FreeSurfer parcellation of static (target) subject (not used in version 1.0, needed for tractID from 38 to 45) |
+
+#### 📤 Outputs
+
+| Output | Datatype | Description |
+|---|---|---|
+| `output_wmc` | `neuro/wmc` | segmented bundles |
+
+<details>
+<summary><b>⚙️ Parameters</b> (8)</summary>
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `k` | number | `2000` | value for k-NN to compute the superset |
+| `step_size` | number | `0.625` | step size for resampling |
+| `slr` | boolean | `true` | If false, assuming subjects already co-registered in the same space |
+| `lambdaD` | number | `1` | weight for the distance matrix |
+| `lambdaE` | number | `1` | weight for the endpoint-based distance matrix |
+| `lambdaR` | number | `1` | weight for the ROI-based distance matrix |
+| `norm_mat` | boolean | `true` | matrices normalization |
+| `tractID_list` | string |  | ID list of the bundles of interest, separated by commas (refer to the README.md for the mapping) |
+
+</details>
+
+📚 **References used by this App:**
+- Bertò G., Avesani P., Pestilli F., Bullock D., Caron B., Olivetti E. Anatomically-Informed Multiple Linear Assignment Problems for White Matter Bundle Segmentation. ISBI 2019. [doi:10.1109/ISBI.2019.8759174](https://doi.org/10.1109/ISBI.2019.8759174)
+- Avesani P. et al. The open diffusion data derivatives, brain data upcycling via integrated publishing of derivatives and reproducible open cloud services. Sci Data 6, 69 (2019). [doi:10.1038/s41597-019-0073-y](https://doi.org/10.1038/s41597-019-0073-y)
+
+<!-- brainlife-app:end -->
+
 This App segments white matter bundles by solving Anatomically-Informed multiple Linear Assignment Problems (multi-LAP-anat). The method is a supervised example-based segmentation method, and thus requires multiple bundles as examples to learn from. The segmentation is performed by means of fiber correspondence across subjects by considering both the shape of the fibers and their relative anatomical position.
 
 ![](app-lap-anat-avatar.png)
